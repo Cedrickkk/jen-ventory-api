@@ -34,9 +34,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             @NonNull HttpServletResponse response,
             @NonNull FilterChain filterChain) throws ServletException, IOException {
 
-        String token = extractToken(request);
-
-        if (token != null) {
+        extractToken(request).ifPresent(token -> {
             try {
                 String username = jwtService.extractUsername(token);
 
@@ -57,19 +55,18 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             } catch (Exception e) {
                 log.error("JWT authentication failed: {}", e.getMessage());
             }
-        }
+        });
 
         filterChain.doFilter(request, response);
     }
 
-    private String extractToken(HttpServletRequest request) {
+    private Optional<String> extractToken(HttpServletRequest request) {
         return Optional.ofNullable(request.getCookies())
                 .stream()
                 .flatMap(Arrays::stream)
                 .filter(cookie -> cookie.getName().equals(CookieService.COOKIE_ACCESS_TOKEN_NAME))
                 .map(Cookie::getValue)
-                .findFirst()
-                .orElse(null);
+                .findFirst();
     }
 
 }
