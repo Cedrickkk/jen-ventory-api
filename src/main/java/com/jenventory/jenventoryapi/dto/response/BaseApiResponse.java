@@ -1,11 +1,12 @@
 package com.jenventory.jenventoryapi.dto.response;
 
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import lombok.experimental.SuperBuilder;
 
-import java.sql.Timestamp;
 import java.time.Instant;
-import java.util.UUID;
 
 @Getter
 @Setter
@@ -16,15 +17,14 @@ public abstract class BaseApiResponse {
     private int code;
     private String status;
     private String message;
-    @Builder.Default
-    private Meta meta = new BaseApiResponse.Meta(Timestamp.from(Instant.now()), UUID.randomUUID().toString());
+    private Meta meta;
 
     @Getter
     @Setter
     @NoArgsConstructor
     @AllArgsConstructor
     public static class Meta {
-        private Timestamp timestamp;
+        private Instant timestamp;
         private String requestId;
     }
 }
