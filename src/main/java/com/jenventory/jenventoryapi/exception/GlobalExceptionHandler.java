@@ -1,8 +1,11 @@
 package com.jenventory.jenventoryapi.exception;
 
+import com.jenventory.jenventoryapi.dto.response.ApiResponseUtil;
+import com.jenventory.jenventoryapi.dto.response.BaseApiResponse;
 import com.jenventory.jenventoryapi.dto.response.ErrorApiResponse;
 import com.jenventory.jenventoryapi.dto.response.FieldErrorDetail;
 import com.jenventory.jenventoryapi.mapper.ErrorApiResponseMapper;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -10,10 +13,15 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+import java.time.Instant;
 import java.util.List;
+import java.util.UUID;
 
 @RestControllerAdvice
+@RequiredArgsConstructor
 public class GlobalExceptionHandler {
+
+    private final ErrorApiResponseMapper errorApiResponseMapper;
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<ErrorApiResponse<List<FieldErrorDetail>>> handleValidationException(
@@ -22,7 +30,7 @@ public class GlobalExceptionHandler {
         List<FieldErrorDetail> errors = ex.getBindingResult()
                 .getFieldErrors()
                 .stream()
-                .map(ErrorApiResponseMapper::toFieldDetail)
+                .map(errorApiResponseMapper::toFieldDetail)
                 .toList();
 
         ErrorApiResponse<List<FieldErrorDetail>> response = ErrorApiResponse.<List<FieldErrorDetail>>builder()
@@ -41,10 +49,23 @@ public class GlobalExceptionHandler {
                 .code(HttpStatus.UNAUTHORIZED.value())
                 .status(HttpStatus.UNAUTHORIZED.getReasonPhrase())
                 .message("Invalid username or password.")
+                .meta(new BaseApiResponse.Meta(Instant.now(), UUID.randomUUID().toString()))
                 .errors(null)
                 .build();
 
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(response);
     }
 
+    @ExceptionHandler(ResourceNotFoundException.class)
+    public ResponseEntity<ErrorApiResponse<Void>> handleResourceNotFoundException(ResourceNotFoundException ex) {
+        ErrorApiResponse<Void> response = ApiResponseUtil.notFound(ex.getMessage());
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
+    }
+
+
+    @ExceptionHandler(DuplicateResourceException.class)
+    public ResponseEntity<ErrorApiResponse<Void>> handleDuplicateResourceException(DuplicateResourceException ex) {
+        ErrorApiResponse<Void> response = ApiResponseUtil.badRequest(ex.getMessage());
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+    }
 }
