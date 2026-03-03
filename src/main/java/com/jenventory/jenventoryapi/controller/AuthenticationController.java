@@ -1,6 +1,10 @@
 package com.jenventory.jenventoryapi.controller;
 
-import com.jenventory.jenventoryapi.dto.*;
+import com.jenventory.jenventoryapi.dto.request.LoginRequest;
+import com.jenventory.jenventoryapi.dto.request.RegisterRequest;
+import com.jenventory.jenventoryapi.dto.response.AuthenticationResponse;
+import com.jenventory.jenventoryapi.dto.response.SuccessApiResponse;
+import com.jenventory.jenventoryapi.dto.response.UserResponse;
 import com.jenventory.jenventoryapi.security.AuthenticationService;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;

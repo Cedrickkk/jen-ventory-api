@@ -1,6 +1,6 @@
 package com.jenventory.jenventoryapi.mapper;
 
-import com.jenventory.jenventoryapi.dto.FieldErrorDetail;
+import com.jenventory.jenventoryapi.dto.response.FieldErrorDetail;
 import org.springframework.validation.FieldError;
 
 public class ErrorApiResponseMapper {

@@ -1,4 +1,4 @@
-package com.jenventory.jenventoryapi.dto;
+package com.jenventory.jenventoryapi.dto.response;
 
 import lombok.*;
 

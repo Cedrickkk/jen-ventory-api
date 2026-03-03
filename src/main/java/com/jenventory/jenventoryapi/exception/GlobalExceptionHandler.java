@@ -1,7 +1,7 @@
 package com.jenventory.jenventoryapi.exception;
 
-import com.jenventory.jenventoryapi.dto.ErrorApiResponse;
-import com.jenventory.jenventoryapi.dto.FieldErrorDetail;
+import com.jenventory.jenventoryapi.dto.response.ErrorApiResponse;
+import com.jenventory.jenventoryapi.dto.response.FieldErrorDetail;
 import com.jenventory.jenventoryapi.mapper.ErrorApiResponseMapper;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

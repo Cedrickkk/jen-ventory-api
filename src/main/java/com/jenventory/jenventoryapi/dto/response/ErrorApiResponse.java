@@ -1,4 +1,5 @@
-package com.jenventory.jenventoryapi.dto;
+package com.jenventory.jenventoryapi.dto.response;
+
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -11,6 +12,6 @@ import lombok.experimental.SuperBuilder;
 @NoArgsConstructor
 @AllArgsConstructor
 @SuperBuilder
-public class SuccessApiResponse<T> extends BaseApiResponse {
-    T data;
+public class ErrorApiResponse<T> extends BaseApiResponse {
+    T errors;
 }

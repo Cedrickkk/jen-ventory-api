@@ -1,8 +1,8 @@
 package com.jenventory.jenventoryapi.service;
 
-import com.jenventory.jenventoryapi.dto.AuthenticationResponse;
-import com.jenventory.jenventoryapi.dto.LoginRequest;
-import com.jenventory.jenventoryapi.dto.RegisterRequest;
+import com.jenventory.jenventoryapi.dto.request.LoginRequest;
+import com.jenventory.jenventoryapi.dto.request.RegisterRequest;
+import com.jenventory.jenventoryapi.dto.response.AuthenticationResponse;
 import com.jenventory.jenventoryapi.entity.User;
 import com.jenventory.jenventoryapi.repository.UserRepository;
 import com.jenventory.jenventoryapi.security.AuthenticationService;
