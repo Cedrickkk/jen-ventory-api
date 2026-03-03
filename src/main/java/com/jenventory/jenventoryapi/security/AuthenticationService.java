@@ -5,12 +5,14 @@ import com.jenventory.jenventoryapi.dto.request.RegisterRequest;
 import com.jenventory.jenventoryapi.dto.response.AuthenticationResponse;
 import com.jenventory.jenventoryapi.dto.response.UserResponse;
 import com.jenventory.jenventoryapi.entity.User;
+import com.jenventory.jenventoryapi.exception.DuplicateResourceException;
 import com.jenventory.jenventoryapi.repository.UserRepository;
 import jakarta.servlet.http.Cookie;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -28,7 +30,7 @@ public class AuthenticationService {
 
     public AuthenticationResponse register(RegisterRequest request) {
         if (userRepository.findByEmail(request.getEmail()).isPresent()) {
-            throw new RuntimeException("Email already exists.");
+            throw new DuplicateResourceException("Email already exists.");
         }
 
         User user = userRepository.save(User.builder()
@@ -49,7 +51,7 @@ public class AuthenticationService {
         );
 
         User user = userRepository.findByEmail(request.getEmail())
-                .orElseThrow(() -> new RuntimeException("User not found."));
+                .orElseThrow(() -> new UsernameNotFoundException("User not found."));
 
         return buildAuthenticationResponse(user);
     }
