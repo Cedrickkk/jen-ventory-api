@@ -1,6 +1,7 @@
 package com.jenventory.jenventoryapi.security;
 
 import com.jenventory.jenventoryapi.entity.User;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.jspecify.annotations.Nullable;
 import org.springframework.security.core.GrantedAuthority;
@@ -11,9 +12,10 @@ import java.util.Collection;
 import java.util.List;
 
 @RequiredArgsConstructor
+@Getter
 public class ApplicationUserDetails implements UserDetails {
 
-    public final User user;
+    private final User user;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
