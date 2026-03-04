@@ -6,9 +6,12 @@ import com.jenventory.jenventoryapi.dto.response.ApiResponseUtil;
 import com.jenventory.jenventoryapi.dto.response.AuthenticationResponse;
 import com.jenventory.jenventoryapi.dto.response.SuccessApiResponse;
 import com.jenventory.jenventoryapi.dto.response.UserResponse;
+import com.jenventory.jenventoryapi.exception.InvalidTokenException;
 import com.jenventory.jenventoryapi.security.ApplicationUserDetails;
 import com.jenventory.jenventoryapi.security.AuthenticationService;
 import com.jenventory.jenventoryapi.security.CookieService;
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -17,6 +20,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -25,6 +29,7 @@ import java.util.Map;
 public class AuthenticationController {
 
     private final AuthenticationService authenticationService;
+    private final CookieService cookieService;
 
     @PostMapping("/register")
     public ResponseEntity<SuccessApiResponse<Map<String, UserResponse>>> createUser(
@@ -60,28 +65,25 @@ public class AuthenticationController {
     }
 
     @PostMapping("/logout")
-    public ResponseEntity<SuccessApiResponse<Void>> logout(HttpServletResponse response) {
-        AuthenticationResponse auth = authenticationService.logout();
+    public ResponseEntity<SuccessApiResponse<Void>> logout(HttpServletRequest request, HttpServletResponse response) {
+        String refreshToken = cookieService.extractCookieValue(request, CookieService.COOKIE_REFRESH_TOKEN_NAME)
+                .orElseThrow(() -> new InvalidTokenException("Refresh token is missing."));
 
-        auth.getCookies().forEach(response::addCookie);
+        List<Cookie> clearedCookies = authenticationService.logout(refreshToken);
 
-        SuccessApiResponse<Void> successApiResponse =
-                ApiResponseUtil.success(null, "Logout successful.");
+        clearedCookies.forEach(response::addCookie);
 
-        return ResponseEntity.ok(successApiResponse);
+        return ResponseEntity.noContent().build();
     }
 
-    /**
-     * TODO: Delegate responsibility to service
-     */
     @GetMapping("/me")
     public ResponseEntity<SuccessApiResponse<UserResponse>> getCurrentUser(
             @AuthenticationPrincipal ApplicationUserDetails userDetails) {
 
         UserResponse userResponse = UserResponse.builder()
-                .id(userDetails.user.getId())
-                .name(userDetails.user.getName())
-                .email(userDetails.user.getEmail())
+                .id(userDetails.getUser().getId())
+                .name(userDetails.getUser().getName())
+                .email(userDetails.getUser().getEmail())
                 .build();
 
         SuccessApiResponse<UserResponse> successApiResponse = SuccessApiResponse.<UserResponse>builder()
@@ -99,13 +101,12 @@ public class AuthenticationController {
             @CookieValue(name = CookieService.COOKIE_REFRESH_TOKEN_NAME) String refreshToken,
             HttpServletResponse response) {
 
-        AuthenticationResponse auth = authenticationService.refreshToken(refreshToken);
+        List<Cookie> cookies = authenticationService.refreshToken(refreshToken);
 
-        // Add the new tokens (access and potentially a rotated refresh token) to the response
-        auth.getCookies().forEach(response::addCookie);
+        cookies.forEach(response::addCookie);
 
         SuccessApiResponse<Void> successApiResponse =
-                ApiResponseUtil.success(null, "Token refreshed successfully.");
+                ApiResponseUtil.success(null, "Tokens refreshed successfully.");
 
         return ResponseEntity.ok(successApiResponse);
     }

@@ -1,8 +1,12 @@
 package com.jenventory.jenventoryapi.security;
 
 import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+
+import java.util.Arrays;
+import java.util.Optional;
 
 @Service
 public class CookieService {
@@ -57,6 +61,19 @@ public class CookieService {
         cookie.setPath("/");
         cookie.setMaxAge(0);
         return cookie;
+    }
+
+    public Optional<String> extractCookieValue(HttpServletRequest request, String cookieName) {
+        Cookie[] cookies = request.getCookies();
+
+        if (cookies == null) {
+            return Optional.empty();
+        }
+
+        return Arrays.stream(cookies)
+                .filter(cookie -> cookie.getName().equals(cookieName))
+                .map(Cookie::getValue)
+                .findFirst();
     }
 
 }
