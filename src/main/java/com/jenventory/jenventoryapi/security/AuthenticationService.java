@@ -6,6 +6,8 @@ import com.jenventory.jenventoryapi.dto.response.AuthenticationResponse;
 import com.jenventory.jenventoryapi.dto.response.UserResponse;
 import com.jenventory.jenventoryapi.entity.User;
 import com.jenventory.jenventoryapi.exception.DuplicateResourceException;
+import com.jenventory.jenventoryapi.exception.InvalidTokenException;
+import com.jenventory.jenventoryapi.mapper.UserMapper;
 import com.jenventory.jenventoryapi.repository.UserRepository;
 import jakarta.servlet.http.Cookie;
 import lombok.RequiredArgsConstructor;
@@ -27,6 +29,7 @@ public class AuthenticationService {
     private final UserRepository userRepository;
     private final AuthenticationManager authenticationManager;
     private final PasswordEncoder passwordEncoder;
+    private final UserMapper userMapper;
 
     public AuthenticationResponse register(RegisterRequest request) {
         if (userRepository.findByEmail(request.getEmail()).isPresent()) {
@@ -38,6 +41,7 @@ public class AuthenticationService {
                 .email(request.getEmail())
                 .password(passwordEncoder.encode(request.getPassword()))
                 .build());
+
 
         return buildAuthenticationResponse(user);
     }
@@ -56,6 +60,17 @@ public class AuthenticationService {
         return buildAuthenticationResponse(user);
     }
 
+    public AuthenticationResponse logout() {
+        List<Cookie> cookies = List.of(
+                cookieService.clearAccessTokenCookie(),
+                cookieService.clearRefreshTokenCookie()
+        );
+
+        return AuthenticationResponse.builder()
+                .cookies(cookies)
+                .build();
+    }
+
 
     private AuthenticationResponse buildAuthenticationResponse(User user) {
         UserDetails userDetails = new ApplicationUserDetails(user);
@@ -68,16 +83,32 @@ public class AuthenticationService {
                 cookieService.createRefreshTokenCookie(refreshToken)
         );
 
-        UserResponse userResponse = UserResponse.builder()
-                .id(user.getId())
-                .name(user.getName())
-                .email(user.getEmail())
-                .build();
+        UserResponse userResponse = userMapper.toResponse(user);
 
         return AuthenticationResponse.builder()
                 .user(userResponse)
                 .cookies(cookies)
                 .build();
+    }
+
+    public AuthenticationResponse refreshToken(String refreshToken) {
+        // Extract email from the refresh token
+        String userEmail = jwtService.extractUsername(refreshToken);
+
+        if (userEmail != null) {
+            User user = userRepository.findByEmail(userEmail)
+                    .orElseThrow(() -> new UsernameNotFoundException("User not found"));
+
+            UserDetails userDetails = new ApplicationUserDetails(user);
+
+            // Validate the token against user details
+            if (jwtService.isTokenValid(refreshToken, userDetails)) {
+                return buildAuthenticationResponse(user);
+            }
+        }
+
+        // Refresh token is invalid or expired
+        throw new InvalidTokenException("Invalid refresh token");
     }
 
 }

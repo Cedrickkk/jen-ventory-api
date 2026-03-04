@@ -13,7 +13,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class ApplicationUserDetails implements UserDetails {
 
-    private final User user;
+    public final User user;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

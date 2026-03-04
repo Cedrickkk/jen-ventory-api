@@ -40,4 +40,23 @@ public class CookieService {
         cookie.setMaxAge(getRefreshTokenMaxAge());
         return cookie;
     }
+
+    public Cookie clearAccessTokenCookie() {
+        Cookie cookie = new Cookie(COOKIE_ACCESS_TOKEN_NAME, null);
+        cookie.setHttpOnly(true);
+        cookie.setSecure(true);
+        cookie.setPath("/");
+        cookie.setMaxAge(0);
+        return cookie;
+    }
+
+    public Cookie clearRefreshTokenCookie() {
+        Cookie cookie = new Cookie(COOKIE_REFRESH_TOKEN_NAME, null);
+        cookie.setHttpOnly(true);
+        cookie.setSecure(true);
+        cookie.setPath("/");
+        cookie.setMaxAge(0);
+        return cookie;
+    }
+
 }
