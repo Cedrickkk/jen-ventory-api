@@ -1,9 +1,13 @@
 package com.jenventory.jenventoryapi.dto.response;
 
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
-@Getter
-@Setter
+import java.time.LocalDateTime;
+
+@Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
@@ -11,4 +15,6 @@ public class UserResponse {
     private Long id;
     private String email;
     private String name;
+    private LocalDateTime createdAt;
+    private LocalDateTime updatedAt;
 }
