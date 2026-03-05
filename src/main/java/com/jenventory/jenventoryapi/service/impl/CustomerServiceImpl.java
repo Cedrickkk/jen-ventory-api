@@ -28,14 +28,14 @@ public class CustomerServiceImpl implements CustomerService {
     @Override
     @Transactional(readOnly = true)
     public Page<CustomerResponse> getAll(Pageable pageable) {
-        return customerRepository.findAllByIsActiveTrue(pageable)
+        return customerRepository.findAllByActiveTrue(pageable)
                 .map(customerMapper::toResponse);
     }
 
     @Override
     @Transactional(readOnly = true)
     public CustomerResponse findById(Long id) {
-        Customer customer = customerRepository.findByIdAndIsActiveTrue(id)
+        Customer customer = customerRepository.findByIdAndActiveTrue(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Customer not found with id: " + id));
 
         return customerMapper.toResponse(customer);
@@ -59,8 +59,12 @@ public class CustomerServiceImpl implements CustomerService {
     @Override
     @Transactional
     public CustomerResponse update(Long id, CustomerRequest request) {
-        Customer customer = customerRepository.findByIdAndIsActiveTrue(id)
+        Customer customer = customerRepository.findByIdAndActiveTrue(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Customer not found with id: " + id));
+
+        if (customerRepository.existsByPhoneAndIdNot(request.getPhone(), id)) {
+            throw new DuplicateResourceException("Customer with phone number " + request.getPhone() + " already exists.");
+        }
 
         customer.setName(request.getName());
         customer.setPhone(request.getPhone());
@@ -74,7 +78,7 @@ public class CustomerServiceImpl implements CustomerService {
     @Override
     @Transactional
     public void deactivate(Long id) {
-        Customer customer = customerRepository.findByIdAndIsActiveTrue(id)
+        Customer customer = customerRepository.findByIdAndActiveTrue(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Active customer not found with id: " + id));
 
         customer.setActive(false);
@@ -84,7 +88,7 @@ public class CustomerServiceImpl implements CustomerService {
     @Override
     @Transactional
     public CustomerResponse reactivate(Long id) {
-        Customer customer = customerRepository.findByIdAndIsActiveFalse(id)
+        Customer customer = customerRepository.findByIdAndActiveFalse(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Inactive customer not found with id: " + id));
 
         customer.setActive(true);

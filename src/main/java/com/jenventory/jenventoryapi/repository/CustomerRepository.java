@@ -14,21 +14,23 @@ import java.util.Optional;
 @Repository
 public interface CustomerRepository extends JpaRepository<Customer, Long> {
 
-    Page<Customer> findAllByIsActiveTrue(Pageable pageable);
+    Page<Customer> findAllByActiveTrue(Pageable pageable);
 
-    Optional<Customer> findByIdAndIsActiveTrue(Long id);
+    Optional<Customer> findByIdAndActiveTrue(Long id);
 
-    Optional<Customer> findByIdAndIsActiveFalse(Long id);
+    Optional<Customer> findByIdAndActiveFalse(Long id);
+
+    boolean existsByPhoneAndIdNot(String phone, Long id);
 
     boolean existsByPhone(String phone);
 
-    boolean existsByPhoneAndIsActiveTrue(String phone);
+    boolean existsByPhoneAndActiveTrue(String phone);
 
     @Query("""
             SELECT c FROM Customer c
             WHERE (LOWER(c.name) LIKE LOWER(CONCAT('%', :query, '%'))
             OR LOWER(c.phone) LIKE LOWER(CONCAT('%', :query, '%')))
-            AND c.isActive = true
+            AND c.active = true
             """)
     List<Customer> search(@Param("query") String query);
 
