@@ -23,7 +23,7 @@ public class CustomerController {
     private final CustomerService customerService;
 
     @GetMapping
-    public ResponseEntity<SuccessApiResponse<Page<CustomerResponse>>> getAllCustomers(Pageable pageable) {
+    public ResponseEntity<SuccessApiResponse<Page<CustomerResponse>>> getAll(Pageable pageable) {
         Page<CustomerResponse> paginatedCustomers = customerService.getAll(pageable);
 
         SuccessApiResponse<Page<CustomerResponse>> response =
