@@ -15,11 +15,11 @@ public interface CustomerService {
 
     Page<CustomerResponse> getAll(Pageable pageable);
 
-    List<CustomerResponse> search(String name);
+    List<CustomerResponse> search(String query);
 
     CustomerResponse update(Long id, CustomerRequest customer);
 
     void deactivate(Long id);
 
-    void reactivate(Long id);
+    CustomerResponse reactivate(Long id);
 }

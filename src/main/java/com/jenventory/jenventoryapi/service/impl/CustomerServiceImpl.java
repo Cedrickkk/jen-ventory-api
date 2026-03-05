@@ -3,15 +3,17 @@ package com.jenventory.jenventoryapi.service.impl;
 import com.jenventory.jenventoryapi.dto.request.CustomerRequest;
 import com.jenventory.jenventoryapi.dto.response.CustomerResponse;
 import com.jenventory.jenventoryapi.entity.Customer;
+import com.jenventory.jenventoryapi.exception.DuplicateResourceException;
+import com.jenventory.jenventoryapi.exception.ResourceNotFoundException;
 import com.jenventory.jenventoryapi.mapper.CustomerMapper;
 import com.jenventory.jenventoryapi.repository.CustomerRepository;
 import com.jenventory.jenventoryapi.service.CustomerService;
-import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -24,49 +26,86 @@ public class CustomerServiceImpl implements CustomerService {
     private final CustomerMapper customerMapper;
 
     @Override
-    public CustomerResponse findById(Long id) {
-        return null;
-    }
-
-    @Override
+    @Transactional(readOnly = true)
     public Page<CustomerResponse> getAll(Pageable pageable) {
-        Page<Customer> allByIsActiveTrue = customerRepository.findAllByIsActiveTrue(pageable);
-
-        log.info("Retrieved {} active customers", allByIsActiveTrue.getContent());
-
         return customerRepository.findAllByIsActiveTrue(pageable)
                 .map(customerMapper::toResponse);
     }
 
+    @Override
+    @Transactional(readOnly = true)
+    public CustomerResponse findById(Long id) {
+        Customer customer = customerRepository.findByIdAndIsActiveTrue(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Customer not found with id: " + id));
+
+        return customerMapper.toResponse(customer);
+    }
+
+
+    @Override
     @Transactional
-    @Override
     public CustomerResponse create(CustomerRequest request) {
-        log.info("Creating customer with request: {}", request);
+        if (customerRepository.existsByPhone(request.getPhone())) {
+            throw new DuplicateResourceException("Customer with phone number " + request.getPhone() + " already exists.");
+        }
 
-        Customer customer = customerMapper.toEntity(request);
+        Customer _customer = customerMapper.toEntity(request);
 
-        Customer savedCustomer = customerRepository.save(customer);
+        Customer customer = customerRepository.save(_customer);
 
-        return customerMapper.toResponse(savedCustomer);
+        return customerMapper.toResponse(customer);
     }
 
     @Override
-    public List<CustomerResponse> search(String name) {
-        return List.of();
+    @Transactional
+    public CustomerResponse update(Long id, CustomerRequest request) {
+        Customer customer = customerRepository.findByIdAndIsActiveTrue(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Customer not found with id: " + id));
+
+        customer.setName(request.getName());
+        customer.setPhone(request.getPhone());
+        customer.setAddress(request.getAddress());
+
+        customerRepository.save(customer);
+
+        return customerMapper.toResponse(customer);
     }
 
     @Override
-    public CustomerResponse update(Long id, CustomerRequest customer) {
-        return null;
-    }
-
-    @Override
+    @Transactional
     public void deactivate(Long id) {
+        Customer customer = customerRepository.findByIdAndIsActiveTrue(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Active customer not found with id: " + id));
 
+        customer.setActive(false);
+        customerRepository.save(customer);
     }
 
     @Override
-    public void reactivate(Long id) {
+    @Transactional
+    public CustomerResponse reactivate(Long id) {
+        Customer customer = customerRepository.findByIdAndIsActiveFalse(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Inactive customer not found with id: " + id));
 
+        customer.setActive(true);
+        customerRepository.save(customer);
+
+        return customerMapper.toResponse(customer);
     }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<CustomerResponse> search(String query) {
+        if (query.isBlank()) {
+            return List.of();
+        }
+
+        List<Customer> customers = customerRepository.search(query);
+
+        return customers.stream()
+                .map(customerMapper::toResponse)
+                .toList();
+    }
+
+
 }
