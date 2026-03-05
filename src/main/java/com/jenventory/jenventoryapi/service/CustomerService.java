@@ -9,7 +9,7 @@ import java.util.List;
 
 public interface CustomerService {
 
-    CustomerResponse create(CustomerRequest customer);
+    CustomerResponse create(CustomerRequest request);
 
     CustomerResponse findById(Long id);
 
@@ -17,7 +17,7 @@ public interface CustomerService {
 
     List<CustomerResponse> search(String query);
 
-    CustomerResponse update(Long id, CustomerRequest customer);
+    CustomerResponse update(Long id, CustomerRequest request);
 
     void deactivate(Long id);
 
