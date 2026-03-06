@@ -66,7 +66,7 @@ class CustomerServiceTest {
                 .name("Maria Santos")
                 .phone("09171234567")
                 .address("123 Rizal St, Manila")
-                .isActive(true)
+                .active(true)
                 .createdAt(LocalDateTime.now())
                 .updatedAt(LocalDateTime.now())
                 .build();

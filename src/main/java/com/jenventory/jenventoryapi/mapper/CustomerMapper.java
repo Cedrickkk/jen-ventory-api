@@ -22,7 +22,7 @@ public class CustomerMapper {
                 .name(customer.getName())
                 .phone(customer.getPhone())
                 .address(customer.getAddress())
-                .isActive(customer.isActive())
+                .active(customer.isActive())
                 .createdAt(customer.getCreatedAt())
                 .updatedAt(customer.getUpdatedAt())
                 .build();

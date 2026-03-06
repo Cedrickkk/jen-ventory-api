@@ -17,7 +17,7 @@ public class CustomerResponse {
     private String name;
     private String phone;
     private String address;
-    private boolean isActive;
+    private boolean active;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 
