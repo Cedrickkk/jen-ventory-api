@@ -30,7 +30,7 @@ public class ProductVariantMapper {
                 .flavor(variant.getFlavor())
                 .packaging(variant.getPackaging())
                 .stockQuantity(variant.getStockQuantity())
-                .isActive(variant.isActive())
+                .active(variant.isActive())
                 .createdAt(variant.getCreatedAt())
                 .updatedAt(variant.getUpdatedAt())
                 .build();

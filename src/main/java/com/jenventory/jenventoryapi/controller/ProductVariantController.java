@@ -1,10 +1,16 @@
 package com.jenventory.jenventoryapi.controller;
 
+import com.jenventory.jenventoryapi.dto.request.AdjustmentRequest;
 import com.jenventory.jenventoryapi.dto.request.ProductVariantRequest;
+import com.jenventory.jenventoryapi.dto.request.RestockRequest;
+import com.jenventory.jenventoryapi.dto.request.ReturnRequest;
 import com.jenventory.jenventoryapi.dto.response.ApiResponseUtil;
 import com.jenventory.jenventoryapi.dto.response.ProductVariantResponse;
+import com.jenventory.jenventoryapi.dto.response.StockMovementResponse;
 import com.jenventory.jenventoryapi.dto.response.SuccessApiResponse;
+import com.jenventory.jenventoryapi.enums.StockMovementReason;
 import com.jenventory.jenventoryapi.service.ProductVariantService;
+import com.jenventory.jenventoryapi.service.StockMovementService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -19,6 +25,7 @@ import org.springframework.web.bind.annotation.*;
 public class ProductVariantController {
 
     private final ProductVariantService productVariantService;
+    private final StockMovementService stockMovementService;
 
     @GetMapping
     public ResponseEntity<SuccessApiResponse<Page<ProductVariantResponse>>> getAll(
@@ -84,6 +91,54 @@ public class ProductVariantController {
 
         SuccessApiResponse<ProductVariantResponse> response =
                 ApiResponseUtil.success(product, "Product variant reactivated successfully");
+
+        return ResponseEntity.ok(response);
+    }
+
+    @PostMapping("/{id}/restock")
+    public ResponseEntity<SuccessApiResponse<ProductVariantResponse>> restock(
+            @PathVariable Long productId, @PathVariable Long id, @Valid @RequestBody RestockRequest request) {
+
+        ProductVariantResponse productVariantResponse = stockMovementService.restock(id, request);
+
+        SuccessApiResponse<ProductVariantResponse> response =
+                ApiResponseUtil.success(productVariantResponse, "Product variant restocked successfully");
+
+        return ResponseEntity.ok(response);
+    }
+
+    @PostMapping("/{id}/adjustment")
+    public ResponseEntity<SuccessApiResponse<ProductVariantResponse>> adjustment(
+            @PathVariable Long productId, @PathVariable Long id, @Valid @RequestBody AdjustmentRequest request) {
+
+        ProductVariantResponse productVariantResponse = stockMovementService.adjust(id, request);
+
+        SuccessApiResponse<ProductVariantResponse> response =
+                ApiResponseUtil.success(productVariantResponse, "Product variant adjusted successfully");
+
+        return ResponseEntity.ok(response);
+    }
+
+    @PostMapping("/{id}/return")
+    public ResponseEntity<SuccessApiResponse<ProductVariantResponse>> processReturn(
+            @PathVariable Long productId, @PathVariable Long id, @Valid @RequestBody ReturnRequest request) {
+
+        ProductVariantResponse productVariantResponse = stockMovementService.processReturn(id, request);
+
+        SuccessApiResponse<ProductVariantResponse> response =
+                ApiResponseUtil.success(productVariantResponse, "Product variant returned successfully");
+
+        return ResponseEntity.ok(response);
+    }
+
+    @GetMapping("/{id}/stock-movements")
+    public ResponseEntity<SuccessApiResponse<Page<StockMovementResponse>>> getStockMovements(
+            @PathVariable Long productId, @PathVariable Long id,
+            @RequestParam(name = "reason", required = false) StockMovementReason reason, Pageable pageable) {
+        Page<StockMovementResponse> stockMovementResponse = stockMovementService.getMovements(id, reason, pageable);
+
+        SuccessApiResponse<Page<StockMovementResponse>> response =
+                ApiResponseUtil.success(stockMovementResponse, "Stock movements for product variant id: " + id + " retrieved successfully");
 
         return ResponseEntity.ok(response);
     }

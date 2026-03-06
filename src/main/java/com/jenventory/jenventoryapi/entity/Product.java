@@ -1,6 +1,7 @@
 package com.jenventory.jenventoryapi.entity;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
@@ -20,14 +21,15 @@ public class Product {
     @Column(name = "id", nullable = false)
     private Long id;
 
+    @NotNull
     @Column(name = "name", nullable = false)
     private String name;
 
-    @Column(name = "description", length = 512, nullable = true)
+    @Column(name = "description", length = 512)
     private String description;
 
     @Builder.Default
-    @Column(name = "is_active", nullable = false)
+    @Column(name = "active", nullable = false)
     private boolean active = true;
 
     @CreationTimestamp

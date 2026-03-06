@@ -22,7 +22,7 @@ public class ProductVariantResponse {
     private String flavor;
     private String packaging;
     private Integer stockQuantity;
-    private boolean isActive;
+    private boolean active;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 

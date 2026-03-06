@@ -1,11 +1,12 @@
 package com.jenventory.jenventoryapi.entity;
 
-import com.jenventory.jenventoryapi.enums.StockMovementReason;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 @Builder
@@ -14,29 +15,23 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 @Entity
-@Table(name = "stock_movements")
-public class StockMovement {
+@Table(name = "transactions")
+public class Transaction {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "variant_id", nullable = false)
-    private ProductVariant variant;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "transaction_id")
-    private Transaction transaction;
+    @JoinColumn(name = "customer_id")
+    private Customer customer;
 
     @NotNull
-    @Enumerated(EnumType.STRING)
-    @Column(name = "reason", nullable = false)
-    private StockMovementReason reason;
+    @Column(name = "total_amount", nullable = false)
+    private BigDecimal totalAmount;
 
-    @NotNull
-    @Column(name = "quantity_change", nullable = false)
-    private Integer quantityChange;
+    @Column(name = "representative", length = 100)
+    private String representative;
 
     @Column(name = "notes", columnDefinition = "TEXT")
     private String notes;
@@ -44,4 +39,8 @@ public class StockMovement {
     @CreationTimestamp
     @Column(nullable = false, updatable = false)
     private LocalDateTime createdAt;
+
+    @UpdateTimestamp
+    @Column(nullable = false)
+    private LocalDateTime updatedAt;
 }

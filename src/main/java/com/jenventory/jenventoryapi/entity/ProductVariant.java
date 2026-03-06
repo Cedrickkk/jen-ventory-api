@@ -1,5 +1,6 @@
 package com.jenventory.jenventoryapi.entity;
 
+import com.jenventory.jenventoryapi.exception.BusinessRuleException;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
@@ -43,12 +44,13 @@ public class ProductVariant {
     @Column(name = "packaging")
     private String packaging;
 
+    @Setter(AccessLevel.NONE)
     @Builder.Default
     @Column(name = "stock_quantity", nullable = false)
     private Integer stockQuantity = 0;
 
     @Builder.Default
-    @Column(name = "is_active", nullable = false)
+    @Column(name = "active", nullable = false)
     private boolean active = true;
 
     @Version
@@ -61,4 +63,17 @@ public class ProductVariant {
     @UpdateTimestamp
     @Column(nullable = false)
     private LocalDateTime updatedAt;
+
+
+    public void deductStock(int quantity) {
+        if (this.stockQuantity < quantity) {
+            throw new BusinessRuleException("Insufficient stock for variant: " + this.sku);
+        }
+        this.stockQuantity -= quantity;
+    }
+
+    public void addStock(int quantity) {
+        this.stockQuantity += quantity;
+    }
+
 }
