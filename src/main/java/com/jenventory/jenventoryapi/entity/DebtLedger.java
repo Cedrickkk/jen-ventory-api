@@ -1,5 +1,7 @@
 package com.jenventory.jenventoryapi.entity;
 
+import com.jenventory.jenventoryapi.enums.DebtLedgerType;
+import com.jenventory.jenventoryapi.enums.PaymentMethod;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
@@ -7,8 +9,6 @@ import org.hibernate.annotations.CreationTimestamp;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
 
 @Builder
 @AllArgsConstructor
@@ -16,30 +16,32 @@ import java.util.List;
 @Getter
 @Setter
 @Entity
-@Table(name = "transactions")
-public class Transaction {
+@Table(name = "debt_ledgers")
+public class DebtLedger {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "customer_id")
+    @JoinColumn(name = "customer_id", nullable = false)
     private Customer customer;
 
-    @Builder.Default
-    @OneToMany(mappedBy = "transaction", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private List<TransactionItem> items = new ArrayList<>();
-
-    @OneToMany(mappedBy = "transaction", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private List<TransactionPayment> payments = new ArrayList<>();
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "transaction_id")
+    private Transaction transaction;
 
     @NotNull
-    @Column(name = "total_amount", nullable = false)
-    private BigDecimal totalAmount;
+    @Column(name = "amount", nullable = false)
+    private BigDecimal amount;
 
-    @Column(name = "representative", length = 100)
-    private String representative;
+    @NotNull
+    @Enumerated(EnumType.STRING)
+    @Column(name = "type", nullable = false)
+    private DebtLedgerType type;
+
+    @Column(name = "payment_method")
+    private PaymentMethod paymentMethod;
 
     @Column(name = "notes", columnDefinition = "TEXT")
     private String notes;
