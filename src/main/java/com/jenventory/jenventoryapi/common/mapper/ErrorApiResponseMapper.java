@@ -1,6 +1,6 @@
-package com.jenventory.jenventoryapi.mapper;
+package com.jenventory.jenventoryapi.common.mapper;
 
-import com.jenventory.jenventoryapi.dto.response.FieldErrorDetail;
+import com.jenventory.jenventoryapi.common.dto.response.FieldErrorDetail;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.FieldError;
 

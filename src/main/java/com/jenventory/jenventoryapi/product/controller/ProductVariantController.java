@@ -1,7 +1,7 @@
 package com.jenventory.jenventoryapi.product.controller;
 
-import com.jenventory.jenventoryapi.dto.response.ApiResponseUtil;
-import com.jenventory.jenventoryapi.dto.response.SuccessApiResponse;
+import com.jenventory.jenventoryapi.common.dto.response.ApiResponseUtil;
+import com.jenventory.jenventoryapi.common.dto.response.SuccessApiResponse;
 import com.jenventory.jenventoryapi.product.dto.request.AdjustmentRequest;
 import com.jenventory.jenventoryapi.product.dto.request.ProductVariantRequest;
 import com.jenventory.jenventoryapi.product.dto.request.RestockRequest;

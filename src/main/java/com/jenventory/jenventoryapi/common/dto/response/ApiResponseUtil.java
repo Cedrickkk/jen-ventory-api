@@ -1,4 +1,4 @@
-package com.jenventory.jenventoryapi.dto.response;
+package com.jenventory.jenventoryapi.common.dto.response;
 
 import org.springframework.http.HttpStatus;
 

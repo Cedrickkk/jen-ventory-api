@@ -1,10 +1,10 @@
 package com.jenventory.jenventoryapi.common.exception;
 
-import com.jenventory.jenventoryapi.dto.response.ApiResponseUtil;
-import com.jenventory.jenventoryapi.dto.response.BaseApiResponse;
-import com.jenventory.jenventoryapi.dto.response.ErrorApiResponse;
-import com.jenventory.jenventoryapi.dto.response.FieldErrorDetail;
-import com.jenventory.jenventoryapi.mapper.ErrorApiResponseMapper;
+import com.jenventory.jenventoryapi.common.dto.response.ApiResponseUtil;
+import com.jenventory.jenventoryapi.common.dto.response.BaseApiResponse;
+import com.jenventory.jenventoryapi.common.dto.response.ErrorApiResponse;
+import com.jenventory.jenventoryapi.common.dto.response.FieldErrorDetail;
+import com.jenventory.jenventoryapi.common.mapper.ErrorApiResponseMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
