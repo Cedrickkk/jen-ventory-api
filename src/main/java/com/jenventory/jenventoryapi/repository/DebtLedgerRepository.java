@@ -22,4 +22,7 @@ public interface DebtLedgerRepository extends JpaRepository<DebtLedger, Long> {
     @Query("SELECT COALESCE(SUM(d.amount), 0) FROM DebtLedger d WHERE d.customer.id = :customerId AND d.type = :type")
     BigDecimal sumAmountByCustomerIdAndType(@Param("customerId") Long customerId, @Param("type") DebtLedgerType type);
 
+    @Query("SELECT COALESCE(SUM(d.amount), 0) FROM DebtLedger d  WHERE d.transaction.id = :transactionId AND d.type = :type")
+    BigDecimal sumAmountByTransactionIdAndType(@Param("transactionId") Long transactionId, @Param("type") DebtLedgerType type);
+
 }
