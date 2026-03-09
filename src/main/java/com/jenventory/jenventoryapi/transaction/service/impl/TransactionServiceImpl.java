@@ -6,6 +6,11 @@ import com.jenventory.jenventoryapi.customer.dto.response.CustomerTransactionRes
 import com.jenventory.jenventoryapi.customer.entity.Customer;
 import com.jenventory.jenventoryapi.customer.mapper.CustomerMapper;
 import com.jenventory.jenventoryapi.customer.repository.CustomerRepository;
+import com.jenventory.jenventoryapi.product.entity.ProductVariant;
+import com.jenventory.jenventoryapi.product.enums.StockMovementReason;
+import com.jenventory.jenventoryapi.product.mapper.StockMovementMapper;
+import com.jenventory.jenventoryapi.product.repository.ProductVariantRepository;
+import com.jenventory.jenventoryapi.product.repository.StockMovementRepository;
 import com.jenventory.jenventoryapi.transaction.dto.request.TransactionItemRequest;
 import com.jenventory.jenventoryapi.transaction.dto.request.TransactionPaymentRequest;
 import com.jenventory.jenventoryapi.transaction.dto.request.TransactionRequest;
@@ -20,11 +25,6 @@ import com.jenventory.jenventoryapi.transaction.mapper.DebtLedgerMapper;
 import com.jenventory.jenventoryapi.transaction.mapper.TransactionItemMapper;
 import com.jenventory.jenventoryapi.transaction.mapper.TransactionMapper;
 import com.jenventory.jenventoryapi.transaction.mapper.TransactionPaymentMapper;
-import com.jenventory.jenventoryapi.product.entity.ProductVariant;
-import com.jenventory.jenventoryapi.product.enums.StockMovementReason;
-import com.jenventory.jenventoryapi.product.mapper.StockMovementMapper;
-import com.jenventory.jenventoryapi.product.repository.ProductVariantRepository;
-import com.jenventory.jenventoryapi.product.repository.StockMovementRepository;
 import com.jenventory.jenventoryapi.transaction.repository.DebtLedgerRepository;
 import com.jenventory.jenventoryapi.transaction.repository.TransactionItemRepository;
 import com.jenventory.jenventoryapi.transaction.repository.TransactionPaymentRepository;
@@ -214,8 +214,8 @@ public class TransactionServiceImpl implements TransactionService {
                         transaction.getPayments().stream()
                                 .map(TransactionPayment::getAmount)
                                 .reduce(BigDecimal.ZERO, BigDecimal::add),
-                        debtLedgerRepository.sumAmountByTransactionIdAndType(customerId, DebtLedgerType.DEBT),
-                        debtLedgerRepository.sumAmountByTransactionIdAndType(customerId, DebtLedgerType.CREDIT)));
+                        debtLedgerRepository.sumAmountByTransactionIdAndType(transaction.getId(), DebtLedgerType.DEBT),
+                        debtLedgerRepository.sumAmountByTransactionIdAndType(transaction.getId(), DebtLedgerType.CREDIT)));
     }
 
     private void saveDebtEntry(Customer customer, Transaction transaction, DebtLedgerType type, BigDecimal amount) {
