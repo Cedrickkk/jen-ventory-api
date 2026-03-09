@@ -15,6 +15,22 @@ public interface TransactionRepository extends JpaRepository<Transaction, Long> 
 
     @Query("""
             SELECT t FROM Transaction t
+            LEFT JOIN FETCH t.payments
+            WHERE t.customer.id = :id
+            """)
+    Page<Transaction> findAllByCustomerIdWithPayments(@Param("id") Long customerId, Pageable pageable);
+
+    @Query("""
+            SELECT t FROM Transaction t
+            LEFT JOIN FETCH t.customer c
+            """)
+    Page<Transaction> findAllWithCustomer(Pageable pageable);
+
+    /**
+     * NOTE: Set is used to avoid MultipleBagFetchException when fetching multiple collections with JOIN FETCH
+     */
+    @Query("""
+            SELECT t FROM Transaction t
             LEFT JOIN FETCH t.items ti
             LEFT JOIN FETCH ti.productVariant pv
             LEFT JOIN FETCH pv.product
