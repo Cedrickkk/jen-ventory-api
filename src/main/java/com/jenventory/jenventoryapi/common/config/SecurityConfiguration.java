@@ -1,4 +1,4 @@
-package com.jenventory.jenventoryapi.config;
+package com.jenventory.jenventoryapi.common.config;
 
 import com.jenventory.jenventoryapi.repository.UserRepository;
 import com.jenventory.jenventoryapi.security.ApplicationUserDetails;
