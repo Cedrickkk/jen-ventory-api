@@ -26,7 +26,6 @@ import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -193,8 +192,8 @@ public class TransactionServiceImpl implements TransactionService {
 
     @Override
     @Transactional(readOnly = true)
-    public Optional<TransactionResponse> findById(Long id) {
-        return Optional.empty();
+    public TransactionResponse findById(Long id) {
+        return null;
     }
 
     @Override
