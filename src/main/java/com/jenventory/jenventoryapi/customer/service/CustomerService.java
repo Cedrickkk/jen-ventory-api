@@ -1,7 +1,7 @@
-package com.jenventory.jenventoryapi.service;
+package com.jenventory.jenventoryapi.customer.service;
 
-import com.jenventory.jenventoryapi.dto.request.CustomerRequest;
-import com.jenventory.jenventoryapi.dto.response.CustomerResponse;
+import com.jenventory.jenventoryapi.customer.dto.request.CustomerRequest;
+import com.jenventory.jenventoryapi.customer.dto.response.CustomerResponse;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 

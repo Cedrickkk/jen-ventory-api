@@ -1,13 +1,13 @@
-package com.jenventory.jenventoryapi.service.impl;
+package com.jenventory.jenventoryapi.customer.service.impl;
 
 import com.jenventory.jenventoryapi.common.exception.DuplicateResourceException;
 import com.jenventory.jenventoryapi.common.exception.ResourceNotFoundException;
-import com.jenventory.jenventoryapi.dto.request.CustomerRequest;
-import com.jenventory.jenventoryapi.dto.response.CustomerResponse;
-import com.jenventory.jenventoryapi.entity.Customer;
-import com.jenventory.jenventoryapi.mapper.CustomerMapper;
-import com.jenventory.jenventoryapi.repository.CustomerRepository;
-import com.jenventory.jenventoryapi.service.CustomerService;
+import com.jenventory.jenventoryapi.customer.dto.request.CustomerRequest;
+import com.jenventory.jenventoryapi.customer.dto.response.CustomerResponse;
+import com.jenventory.jenventoryapi.customer.entity.Customer;
+import com.jenventory.jenventoryapi.customer.mapper.CustomerMapper;
+import com.jenventory.jenventoryapi.customer.repository.CustomerRepository;
+import com.jenventory.jenventoryapi.customer.service.CustomerService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;

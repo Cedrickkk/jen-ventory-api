@@ -1,4 +1,4 @@
-package com.jenventory.jenventoryapi.dto.response;
+package com.jenventory.jenventoryapi.customer.dto.response;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -22,5 +22,5 @@ public class CustomerTransactionResponse {
     /* How much stored as credit */
     private BigDecimal creditAmount;
     private Integer itemCount;
-    
+
 }

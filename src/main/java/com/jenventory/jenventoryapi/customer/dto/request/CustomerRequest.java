@@ -1,4 +1,4 @@
-package com.jenventory.jenventoryapi.dto.request;
+package com.jenventory.jenventoryapi.customer.dto.request;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;

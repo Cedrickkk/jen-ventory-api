@@ -1,10 +1,10 @@
 package com.jenventory.jenventoryapi.mapper;
 
 
+import com.jenventory.jenventoryapi.customer.entity.Customer;
 import com.jenventory.jenventoryapi.dto.request.TransactionRequest;
 import com.jenventory.jenventoryapi.dto.response.TransactionResponse;
 import com.jenventory.jenventoryapi.dto.response.TransactionSummaryResponse;
-import com.jenventory.jenventoryapi.entity.Customer;
 import com.jenventory.jenventoryapi.entity.Transaction;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;

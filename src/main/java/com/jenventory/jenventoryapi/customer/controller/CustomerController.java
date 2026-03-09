@@ -1,11 +1,11 @@
-package com.jenventory.jenventoryapi.controller;
+package com.jenventory.jenventoryapi.customer.controller;
 
-import com.jenventory.jenventoryapi.dto.request.CustomerRequest;
+import com.jenventory.jenventoryapi.customer.dto.request.CustomerRequest;
+import com.jenventory.jenventoryapi.customer.dto.response.CustomerResponse;
+import com.jenventory.jenventoryapi.customer.dto.response.CustomerTransactionResponse;
+import com.jenventory.jenventoryapi.customer.service.CustomerService;
 import com.jenventory.jenventoryapi.dto.response.ApiResponseUtil;
-import com.jenventory.jenventoryapi.dto.response.CustomerResponse;
-import com.jenventory.jenventoryapi.dto.response.CustomerTransactionResponse;
 import com.jenventory.jenventoryapi.dto.response.SuccessApiResponse;
-import com.jenventory.jenventoryapi.service.CustomerService;
 import com.jenventory.jenventoryapi.service.TransactionService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;

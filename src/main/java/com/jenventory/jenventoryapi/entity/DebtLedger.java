@@ -1,5 +1,6 @@
 package com.jenventory.jenventoryapi.entity;
 
+import com.jenventory.jenventoryapi.customer.entity.Customer;
 import com.jenventory.jenventoryapi.enums.DebtLedgerType;
 import com.jenventory.jenventoryapi.enums.PaymentMethod;
 import jakarta.persistence.*;

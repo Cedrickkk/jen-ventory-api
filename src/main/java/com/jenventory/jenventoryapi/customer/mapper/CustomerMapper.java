@@ -1,9 +1,9 @@
-package com.jenventory.jenventoryapi.mapper;
+package com.jenventory.jenventoryapi.customer.mapper;
 
-import com.jenventory.jenventoryapi.dto.request.CustomerRequest;
-import com.jenventory.jenventoryapi.dto.response.CustomerResponse;
-import com.jenventory.jenventoryapi.dto.response.CustomerTransactionResponse;
-import com.jenventory.jenventoryapi.entity.Customer;
+import com.jenventory.jenventoryapi.customer.dto.request.CustomerRequest;
+import com.jenventory.jenventoryapi.customer.dto.response.CustomerResponse;
+import com.jenventory.jenventoryapi.customer.dto.response.CustomerTransactionResponse;
+import com.jenventory.jenventoryapi.customer.entity.Customer;
 import com.jenventory.jenventoryapi.entity.Transaction;
 import org.springframework.stereotype.Component;
 

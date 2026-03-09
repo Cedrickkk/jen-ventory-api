@@ -1,6 +1,6 @@
-package com.jenventory.jenventoryapi.repository;
+package com.jenventory.jenventoryapi.customer.repository;
 
-import com.jenventory.jenventoryapi.entity.Customer;
+import com.jenventory.jenventoryapi.customer.entity.Customer;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;

@@ -1,7 +1,7 @@
 package com.jenventory.jenventoryapi.mapper;
 
+import com.jenventory.jenventoryapi.customer.entity.Customer;
 import com.jenventory.jenventoryapi.dto.response.DebtLedgerResponse;
-import com.jenventory.jenventoryapi.entity.Customer;
 import com.jenventory.jenventoryapi.entity.DebtLedger;
 import com.jenventory.jenventoryapi.entity.Transaction;
 import com.jenventory.jenventoryapi.enums.DebtLedgerType;

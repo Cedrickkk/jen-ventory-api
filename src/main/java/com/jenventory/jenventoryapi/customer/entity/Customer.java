@@ -1,4 +1,4 @@
-package com.jenventory.jenventoryapi.entity;
+package com.jenventory.jenventoryapi.customer.entity;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
