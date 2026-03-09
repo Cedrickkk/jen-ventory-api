@@ -3,6 +3,7 @@ package com.jenventory.jenventoryapi.service.impl;
 import com.jenventory.jenventoryapi.dto.request.TransactionItemRequest;
 import com.jenventory.jenventoryapi.dto.request.TransactionPaymentRequest;
 import com.jenventory.jenventoryapi.dto.request.TransactionRequest;
+import com.jenventory.jenventoryapi.dto.response.CustomerTransactionResponse;
 import com.jenventory.jenventoryapi.dto.response.TransactionResponse;
 import com.jenventory.jenventoryapi.dto.response.TransactionSummaryResponse;
 import com.jenventory.jenventoryapi.entity.*;
@@ -11,9 +12,7 @@ import com.jenventory.jenventoryapi.enums.PaymentMethod;
 import com.jenventory.jenventoryapi.enums.StockMovementReason;
 import com.jenventory.jenventoryapi.exception.BusinessRuleException;
 import com.jenventory.jenventoryapi.exception.ResourceNotFoundException;
-import com.jenventory.jenventoryapi.mapper.TransactionItemMapper;
-import com.jenventory.jenventoryapi.mapper.TransactionMapper;
-import com.jenventory.jenventoryapi.mapper.TransactionPaymentMapper;
+import com.jenventory.jenventoryapi.mapper.*;
 import com.jenventory.jenventoryapi.repository.*;
 import com.jenventory.jenventoryapi.service.TransactionService;
 import lombok.RequiredArgsConstructor;
@@ -41,6 +40,9 @@ public class TransactionServiceImpl implements TransactionService {
     private final StockMovementRepository stockMovementRepository;
     private final TransactionPaymentRepository transactionPaymentRepository;
     private final TransactionPaymentMapper transactionPaymentMapper;
+    private final DebtLedgerMapper debtLedgerMapper;
+    private final StockMovementMapper stockMovementMapper;
+    private final CustomerMapper customerMapper;
 
     @Override
     @Transactional
@@ -123,22 +125,18 @@ public class TransactionServiceImpl implements TransactionService {
             productVariant.deductStock(item.getQuantity());
             productVariantRepository.save(productVariant);
 
-            stockMovementRepository.save(StockMovement.builder()
-                    .variant(productVariant)
-                    .transaction(transaction)
-                    .quantityChange(-item.getQuantity())
-                    .reason(StockMovementReason.SOLD)
-                    .build());
+            stockMovementRepository.save(stockMovementMapper.toEntity(
+                    productVariant,
+                    transaction,
+                    StockMovementReason.SOLD,
+                    -item.getQuantity(),
+                    null)
+            );
         });
 
         request.getPayments().forEach(payment -> {
             if (PaymentMethod.valueOf(payment.getPaymentMethod()) == PaymentMethod.CREDIT_USED) {
-                debtLedgerRepository.save(DebtLedger.builder()
-                        .customer(customer)
-                        .transaction(transaction)
-                        .type(DebtLedgerType.CREDIT_USED)
-                        .amount(payment.getAmount())
-                        .build());
+                this.saveDebtEntry(customer, transaction, DebtLedgerType.CREDIT_USED, payment.getAmount());
             }
             transactionPaymentRepository.save(transactionPaymentMapper.toEntity(payment, transaction));
         });
@@ -147,24 +145,14 @@ public class TransactionServiceImpl implements TransactionService {
          * DEBT: underpayment
          */
         if (difference.compareTo(BigDecimal.ZERO) > 0 && request.isAllowDebt()) {
-            debtLedgerRepository.save(DebtLedger.builder()
-                    .customer(customer)
-                    .transaction(transaction)
-                    .type(DebtLedgerType.DEBT)
-                    .amount(difference.abs())
-                    .build());
+            this.saveDebtEntry(customer, transaction, DebtLedgerType.DEBT, difference.abs());
         }
 
         /*
          * CREDIT: overpayment
          */
         if (difference.compareTo(BigDecimal.ZERO) < 0 && request.isStoreChangeAsCredit()) {
-            debtLedgerRepository.save(DebtLedger.builder()
-                    .customer(customer)
-                    .transaction(transaction)
-                    .type(DebtLedgerType.CREDIT)
-                    .amount(difference.abs())
-                    .build());
+            this.saveDebtEntry(customer, transaction, DebtLedgerType.CREDIT, difference.abs());
         }
 
         List<TransactionItem> savedItems = transactionItemRepository.findAllByTransactionId(transaction.getId());
@@ -186,19 +174,44 @@ public class TransactionServiceImpl implements TransactionService {
     @Override
     @Transactional(readOnly = true)
     public Page<TransactionSummaryResponse> getAll(Pageable pageable) {
-        return transactionRepository.findAll(pageable)
+        return transactionRepository.findAllWithCustomer(pageable)
                 .map(transactionMapper::toSummaryResponse);
     }
 
     @Override
     @Transactional(readOnly = true)
     public TransactionResponse findById(Long id) {
-        return null;
+        Transaction transaction = transactionRepository.findByIdWithItemsAndPayments(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Transaction not found with id: " + id));
+
+        return transactionMapper.toResponse(transaction);
     }
 
     @Override
-    public Page<TransactionSummaryResponse> getCustomerTransactions(Long customerId, Pageable pageable) {
-        return null;
+    @Transactional(readOnly = true)
+    public Page<CustomerTransactionResponse> getCustomerTransactions(Long customerId, Pageable pageable) {
+        Customer customer = customerRepository.findByIdAndActiveTrue(customerId)
+                .orElseThrow(() -> new ResourceNotFoundException("Active customer not found with id: " + customerId));
+
+        return transactionRepository.findAllByCustomerIdWithPayments(customerId, pageable)
+                .map(transaction -> customerMapper.toTransactionResponse(
+                        transaction,
+                        transaction.getPayments().stream()
+                                .map(TransactionPayment::getAmount)
+                                .reduce(BigDecimal.ZERO, BigDecimal::add),
+                        debtLedgerRepository.sumAmountByTransactionIdAndType(customerId, DebtLedgerType.DEBT),
+                        debtLedgerRepository.sumAmountByTransactionIdAndType(customerId, DebtLedgerType.CREDIT)));
+    }
+
+    private void saveDebtEntry(Customer customer, Transaction transaction, DebtLedgerType type, BigDecimal amount) {
+        debtLedgerRepository.save(debtLedgerMapper.toEntity(
+                customer,
+                transaction,
+                type,
+                null,
+                null,
+                amount)
+        );
     }
 
 }
