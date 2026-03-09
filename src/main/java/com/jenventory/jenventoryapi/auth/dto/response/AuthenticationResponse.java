@@ -1,4 +1,4 @@
-package com.jenventory.jenventoryapi.dto.response;
+package com.jenventory.jenventoryapi.auth.dto.response;
 
 import jakarta.servlet.http.Cookie;
 import lombok.*;

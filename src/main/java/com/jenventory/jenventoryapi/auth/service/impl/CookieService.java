@@ -1,4 +1,4 @@
-package com.jenventory.jenventoryapi.security;
+package com.jenventory.jenventoryapi.auth.service.impl;
 
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;

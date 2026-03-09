@@ -1,7 +1,7 @@
-package com.jenventory.jenventoryapi.mapper;
+package com.jenventory.jenventoryapi.auth.mapper;
 
-import com.jenventory.jenventoryapi.entity.RefreshToken;
-import com.jenventory.jenventoryapi.entity.User;
+import com.jenventory.jenventoryapi.auth.entity.RefreshToken;
+import com.jenventory.jenventoryapi.auth.entity.User;
 import org.springframework.stereotype.Component;
 
 import java.time.Instant;

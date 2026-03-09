@@ -1,13 +1,13 @@
 package com.jenventory.jenventoryapi.service;
 
-import com.jenventory.jenventoryapi.dto.request.LoginRequest;
-import com.jenventory.jenventoryapi.dto.request.RegisterRequest;
-import com.jenventory.jenventoryapi.dto.response.AuthenticationResponse;
-import com.jenventory.jenventoryapi.entity.User;
-import com.jenventory.jenventoryapi.repository.UserRepository;
-import com.jenventory.jenventoryapi.security.AuthenticationService;
-import com.jenventory.jenventoryapi.security.CookieService;
-import com.jenventory.jenventoryapi.security.JwtService;
+import com.jenventory.jenventoryapi.auth.dto.request.LoginRequest;
+import com.jenventory.jenventoryapi.auth.dto.request.RegisterRequest;
+import com.jenventory.jenventoryapi.auth.dto.response.AuthenticationResponse;
+import com.jenventory.jenventoryapi.auth.entity.User;
+import com.jenventory.jenventoryapi.auth.repository.UserRepository;
+import com.jenventory.jenventoryapi.auth.service.impl.AuthenticationService;
+import com.jenventory.jenventoryapi.auth.service.impl.CookieService;
+import com.jenventory.jenventoryapi.auth.service.impl.JwtService;
 import jakarta.servlet.http.Cookie;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

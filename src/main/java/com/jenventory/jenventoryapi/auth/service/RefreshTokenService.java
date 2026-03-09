@@ -1,8 +1,8 @@
-package com.jenventory.jenventoryapi.service;
+package com.jenventory.jenventoryapi.auth.service;
 
 
-import com.jenventory.jenventoryapi.entity.RefreshToken;
-import com.jenventory.jenventoryapi.entity.User;
+import com.jenventory.jenventoryapi.auth.entity.RefreshToken;
+import com.jenventory.jenventoryapi.auth.entity.User;
 
 public interface RefreshTokenService {
 

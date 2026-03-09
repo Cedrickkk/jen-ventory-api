@@ -1,9 +1,9 @@
-package com.jenventory.jenventoryapi.mapper;
+package com.jenventory.jenventoryapi.auth.mapper;
 
 
-import com.jenventory.jenventoryapi.dto.request.RegisterRequest;
-import com.jenventory.jenventoryapi.dto.response.UserResponse;
-import com.jenventory.jenventoryapi.entity.User;
+import com.jenventory.jenventoryapi.auth.dto.request.RegisterRequest;
+import com.jenventory.jenventoryapi.auth.dto.response.UserResponse;
+import com.jenventory.jenventoryapi.auth.entity.User;
 import org.springframework.stereotype.Component;
 
 @Component

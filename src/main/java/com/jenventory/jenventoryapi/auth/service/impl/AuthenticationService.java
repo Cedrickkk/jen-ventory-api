@@ -1,15 +1,16 @@
-package com.jenventory.jenventoryapi.security;
+package com.jenventory.jenventoryapi.auth.service.impl;
 
+import com.jenventory.jenventoryapi.auth.dto.request.LoginRequest;
+import com.jenventory.jenventoryapi.auth.dto.request.RegisterRequest;
+import com.jenventory.jenventoryapi.auth.dto.response.AuthenticationResponse;
+import com.jenventory.jenventoryapi.auth.dto.response.UserResponse;
+import com.jenventory.jenventoryapi.auth.entity.ApplicationUserDetails;
+import com.jenventory.jenventoryapi.auth.entity.RefreshToken;
+import com.jenventory.jenventoryapi.auth.entity.User;
+import com.jenventory.jenventoryapi.auth.mapper.UserMapper;
+import com.jenventory.jenventoryapi.auth.repository.UserRepository;
+import com.jenventory.jenventoryapi.auth.service.RefreshTokenService;
 import com.jenventory.jenventoryapi.common.exception.DuplicateResourceException;
-import com.jenventory.jenventoryapi.dto.request.LoginRequest;
-import com.jenventory.jenventoryapi.dto.request.RegisterRequest;
-import com.jenventory.jenventoryapi.dto.response.AuthenticationResponse;
-import com.jenventory.jenventoryapi.dto.response.UserResponse;
-import com.jenventory.jenventoryapi.entity.RefreshToken;
-import com.jenventory.jenventoryapi.entity.User;
-import com.jenventory.jenventoryapi.mapper.UserMapper;
-import com.jenventory.jenventoryapi.repository.UserRepository;
-import com.jenventory.jenventoryapi.service.RefreshTokenService;
 import jakarta.servlet.http.Cookie;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;

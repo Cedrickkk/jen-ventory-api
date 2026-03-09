@@ -1,4 +1,4 @@
-package com.jenventory.jenventoryapi.entity;
+package com.jenventory.jenventoryapi.auth.entity;
 
 import jakarta.persistence.*;
 import lombok.*;

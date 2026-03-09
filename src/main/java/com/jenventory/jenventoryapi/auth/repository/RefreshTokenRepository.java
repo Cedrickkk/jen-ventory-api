@@ -1,6 +1,6 @@
-package com.jenventory.jenventoryapi.repository;
+package com.jenventory.jenventoryapi.auth.repository;
 
-import com.jenventory.jenventoryapi.entity.RefreshToken;
+import com.jenventory.jenventoryapi.auth.entity.RefreshToken;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;

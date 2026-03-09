@@ -1,4 +1,4 @@
-package com.jenventory.jenventoryapi.dto.request;
+package com.jenventory.jenventoryapi.auth.dto.request;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;

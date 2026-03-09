@@ -1,6 +1,5 @@
-package com.jenventory.jenventoryapi.security;
+package com.jenventory.jenventoryapi.auth.entity;
 
-import com.jenventory.jenventoryapi.entity.User;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.jspecify.annotations.Nullable;

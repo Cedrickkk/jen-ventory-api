@@ -1,8 +1,8 @@
 package com.jenventory.jenventoryapi.common.config;
 
-import com.jenventory.jenventoryapi.repository.UserRepository;
-import com.jenventory.jenventoryapi.security.ApplicationUserDetails;
-import com.jenventory.jenventoryapi.security.JwtAuthenticationFilter;
+import com.jenventory.jenventoryapi.auth.entity.ApplicationUserDetails;
+import com.jenventory.jenventoryapi.auth.filter.JwtAuthenticationFilter;
+import com.jenventory.jenventoryapi.auth.repository.UserRepository;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;

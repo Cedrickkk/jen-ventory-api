@@ -1,15 +1,15 @@
-package com.jenventory.jenventoryapi.controller;
+package com.jenventory.jenventoryapi.auth.controller;
 
+import com.jenventory.jenventoryapi.auth.dto.request.LoginRequest;
+import com.jenventory.jenventoryapi.auth.dto.request.RegisterRequest;
+import com.jenventory.jenventoryapi.auth.dto.response.AuthenticationResponse;
+import com.jenventory.jenventoryapi.auth.dto.response.UserResponse;
+import com.jenventory.jenventoryapi.auth.entity.ApplicationUserDetails;
+import com.jenventory.jenventoryapi.auth.service.impl.AuthenticationService;
+import com.jenventory.jenventoryapi.auth.service.impl.CookieService;
 import com.jenventory.jenventoryapi.common.exception.InvalidTokenException;
-import com.jenventory.jenventoryapi.dto.request.LoginRequest;
-import com.jenventory.jenventoryapi.dto.request.RegisterRequest;
 import com.jenventory.jenventoryapi.dto.response.ApiResponseUtil;
-import com.jenventory.jenventoryapi.dto.response.AuthenticationResponse;
 import com.jenventory.jenventoryapi.dto.response.SuccessApiResponse;
-import com.jenventory.jenventoryapi.dto.response.UserResponse;
-import com.jenventory.jenventoryapi.security.ApplicationUserDetails;
-import com.jenventory.jenventoryapi.security.AuthenticationService;
-import com.jenventory.jenventoryapi.security.CookieService;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;

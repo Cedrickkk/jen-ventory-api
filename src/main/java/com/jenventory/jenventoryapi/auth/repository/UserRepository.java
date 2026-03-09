@@ -1,6 +1,6 @@
-package com.jenventory.jenventoryapi.repository;
+package com.jenventory.jenventoryapi.auth.repository;
 
-import com.jenventory.jenventoryapi.entity.User;
+import com.jenventory.jenventoryapi.auth.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
