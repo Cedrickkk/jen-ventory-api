@@ -1,12 +1,12 @@
 package com.jenventory.jenventoryapi.controller;
 
+import com.jenventory.jenventoryapi.common.exception.InvalidTokenException;
 import com.jenventory.jenventoryapi.dto.request.LoginRequest;
 import com.jenventory.jenventoryapi.dto.request.RegisterRequest;
 import com.jenventory.jenventoryapi.dto.response.ApiResponseUtil;
 import com.jenventory.jenventoryapi.dto.response.AuthenticationResponse;
 import com.jenventory.jenventoryapi.dto.response.SuccessApiResponse;
 import com.jenventory.jenventoryapi.dto.response.UserResponse;
-import com.jenventory.jenventoryapi.exception.InvalidTokenException;
 import com.jenventory.jenventoryapi.security.ApplicationUserDetails;
 import com.jenventory.jenventoryapi.security.AuthenticationService;
 import com.jenventory.jenventoryapi.security.CookieService;
@@ -15,7 +15,6 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;

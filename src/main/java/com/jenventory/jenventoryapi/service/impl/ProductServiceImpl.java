@@ -1,10 +1,10 @@
 package com.jenventory.jenventoryapi.service.impl;
 
+import com.jenventory.jenventoryapi.common.exception.DuplicateResourceException;
+import com.jenventory.jenventoryapi.common.exception.ResourceNotFoundException;
 import com.jenventory.jenventoryapi.dto.request.ProductRequest;
 import com.jenventory.jenventoryapi.dto.response.ProductResponse;
 import com.jenventory.jenventoryapi.entity.Product;
-import com.jenventory.jenventoryapi.exception.DuplicateResourceException;
-import com.jenventory.jenventoryapi.exception.ResourceNotFoundException;
 import com.jenventory.jenventoryapi.mapper.ProductMapper;
 import com.jenventory.jenventoryapi.repository.ProductRepository;
 import com.jenventory.jenventoryapi.service.ProductService;

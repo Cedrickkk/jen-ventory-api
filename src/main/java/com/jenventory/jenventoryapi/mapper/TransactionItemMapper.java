@@ -29,6 +29,7 @@ public class TransactionItemMapper {
                 .sku(transactionItem.getProductVariant().getSku())
                 .quantity(transactionItem.getQuantity())
                 .unitPrice(transactionItem.getUnitPrice())
+                /* ? Calculation should happen in Service  */
                 .subtotal(transactionItem.getUnitPrice().multiply(BigDecimal.valueOf(transactionItem.getQuantity())))
                 .build();
     }

@@ -1,4 +1,4 @@
-package com.jenventory.jenventoryapi.exception;
+package com.jenventory.jenventoryapi.common.exception;
 
 public class ResourceNotFoundException extends RuntimeException {
     public ResourceNotFoundException(String message) {

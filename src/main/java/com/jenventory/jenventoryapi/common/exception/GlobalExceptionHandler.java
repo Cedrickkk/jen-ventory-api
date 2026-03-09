@@ -1,4 +1,4 @@
-package com.jenventory.jenventoryapi.exception;
+package com.jenventory.jenventoryapi.common.exception;
 
 import com.jenventory.jenventoryapi.dto.response.ApiResponseUtil;
 import com.jenventory.jenventoryapi.dto.response.BaseApiResponse;

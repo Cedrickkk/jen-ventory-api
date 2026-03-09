@@ -1,6 +1,6 @@
 package com.jenventory.jenventoryapi.entity;
 
-import com.jenventory.jenventoryapi.exception.BusinessRuleException;
+import com.jenventory.jenventoryapi.common.exception.BusinessRuleException;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;

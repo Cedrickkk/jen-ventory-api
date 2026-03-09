@@ -1,12 +1,12 @@
 package com.jenventory.jenventoryapi.security;
 
+import com.jenventory.jenventoryapi.common.exception.DuplicateResourceException;
 import com.jenventory.jenventoryapi.dto.request.LoginRequest;
 import com.jenventory.jenventoryapi.dto.request.RegisterRequest;
 import com.jenventory.jenventoryapi.dto.response.AuthenticationResponse;
 import com.jenventory.jenventoryapi.dto.response.UserResponse;
 import com.jenventory.jenventoryapi.entity.RefreshToken;
 import com.jenventory.jenventoryapi.entity.User;
-import com.jenventory.jenventoryapi.exception.DuplicateResourceException;
 import com.jenventory.jenventoryapi.mapper.UserMapper;
 import com.jenventory.jenventoryapi.repository.UserRepository;
 import com.jenventory.jenventoryapi.service.RefreshTokenService;

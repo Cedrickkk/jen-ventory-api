@@ -1,5 +1,6 @@
 package com.jenventory.jenventoryapi.service.impl;
 
+import com.jenventory.jenventoryapi.common.exception.ResourceNotFoundException;
 import com.jenventory.jenventoryapi.dto.request.AdjustmentRequest;
 import com.jenventory.jenventoryapi.dto.request.RestockRequest;
 import com.jenventory.jenventoryapi.dto.request.ReturnRequest;
@@ -9,7 +10,6 @@ import com.jenventory.jenventoryapi.entity.ProductVariant;
 import com.jenventory.jenventoryapi.entity.StockMovement;
 import com.jenventory.jenventoryapi.enums.AdjustmentDirection;
 import com.jenventory.jenventoryapi.enums.StockMovementReason;
-import com.jenventory.jenventoryapi.exception.ResourceNotFoundException;
 import com.jenventory.jenventoryapi.mapper.ProductVariantMapper;
 import com.jenventory.jenventoryapi.mapper.StockMovementMapper;
 import com.jenventory.jenventoryapi.repository.ProductVariantRepository;

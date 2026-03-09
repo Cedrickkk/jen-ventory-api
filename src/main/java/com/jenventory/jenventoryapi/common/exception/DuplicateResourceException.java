@@ -1,4 +1,4 @@
-package com.jenventory.jenventoryapi.exception;
+package com.jenventory.jenventoryapi.common.exception;
 
 public class DuplicateResourceException extends RuntimeException {
     public DuplicateResourceException(String message) {

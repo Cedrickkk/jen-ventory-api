@@ -1,8 +1,8 @@
 package com.jenventory.jenventoryapi.service.impl;
 
+import com.jenventory.jenventoryapi.common.exception.InvalidTokenException;
 import com.jenventory.jenventoryapi.entity.RefreshToken;
 import com.jenventory.jenventoryapi.entity.User;
-import com.jenventory.jenventoryapi.exception.InvalidTokenException;
 import com.jenventory.jenventoryapi.mapper.RefreshTokenMapper;
 import com.jenventory.jenventoryapi.repository.RefreshTokenRepository;
 import com.jenventory.jenventoryapi.security.ApplicationUserDetails;
