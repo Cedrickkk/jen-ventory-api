@@ -3,8 +3,10 @@ package com.jenventory.jenventoryapi.controller;
 import com.jenventory.jenventoryapi.dto.request.CustomerRequest;
 import com.jenventory.jenventoryapi.dto.response.ApiResponseUtil;
 import com.jenventory.jenventoryapi.dto.response.CustomerResponse;
+import com.jenventory.jenventoryapi.dto.response.CustomerTransactionResponse;
 import com.jenventory.jenventoryapi.dto.response.SuccessApiResponse;
 import com.jenventory.jenventoryapi.service.CustomerService;
+import com.jenventory.jenventoryapi.service.TransactionService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -23,6 +25,7 @@ import java.util.List;
 public class CustomerController {
 
     private final CustomerService customerService;
+    private final TransactionService transactionService;
 
     @GetMapping
     public ResponseEntity<SuccessApiResponse<Page<CustomerResponse>>> getAll(Pageable pageable) {
@@ -98,6 +101,17 @@ public class CustomerController {
 
         SuccessApiResponse<List<CustomerResponse>> response =
                 ApiResponseUtil.success(customers, "Result for search query: " + query);
+
+        return ResponseEntity.ok(response);
+    }
+
+    @GetMapping("/{id}/transactions")
+    public ResponseEntity<SuccessApiResponse<Page<CustomerTransactionResponse>>> getTransactionsForCustomer(
+            @PathVariable Long id, Pageable pageable) {
+        Page<CustomerTransactionResponse> transactions = transactionService.getCustomerTransactions(id, pageable);
+
+        SuccessApiResponse<Page<CustomerTransactionResponse>> response =
+                ApiResponseUtil.success(transactions, "Customer transactions retrieved successfully");
 
         return ResponseEntity.ok(response);
     }
