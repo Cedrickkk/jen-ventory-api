@@ -88,12 +88,13 @@ public class StockMovementServiceImpl implements StockMovementService {
         productVariant.addStock(request.getQuantity());
         productVariantRepository.save(productVariant);
 
-        stockMovementRepository.save(StockMovement.builder()
-                .variant(productVariant)
-                .quantityChange(request.getQuantity())
-                .reason(StockMovementReason.RETURN)
-                .notes(request.getNotes())
-                .build());
+        stockMovementRepository.save(stockMovementMapper.toEntity(
+                productVariant,
+                null,
+                StockMovementReason.RETURN,
+                request.getQuantity(),
+                request.getNotes())
+        );
 
         return productVariantMapper.toResponse(productVariant);
     }
