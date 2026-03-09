@@ -7,8 +7,8 @@ import org.hibernate.annotations.CreationTimestamp;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 @Builder
 @AllArgsConstructor
@@ -29,10 +29,11 @@ public class Transaction {
 
     @Builder.Default
     @OneToMany(mappedBy = "transaction", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private List<TransactionItem> items = new ArrayList<>();
+    private Set<TransactionItem> items = new HashSet<>();
 
+    @Builder.Default
     @OneToMany(mappedBy = "transaction", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private List<TransactionPayment> payments = new ArrayList<>();
+    private Set<TransactionPayment> payments = new HashSet<>();
 
     @NotNull
     @Column(name = "total_amount", nullable = false)

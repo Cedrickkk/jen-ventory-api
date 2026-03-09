@@ -56,6 +56,12 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(response);
     }
 
+    @ExceptionHandler(BusinessRuleException.class)
+    public ResponseEntity<ErrorApiResponse<Void>> handleBusinessRuleException(BusinessRuleException ex) {
+        ErrorApiResponse<Void> response = ApiResponseUtil.badRequest(ex.getMessage());
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+    }
+
     @ExceptionHandler(ResourceNotFoundException.class)
     public ResponseEntity<ErrorApiResponse<Void>> handleResourceNotFoundException(ResourceNotFoundException ex) {
         ErrorApiResponse<Void> response = ApiResponseUtil.notFound(ex.getMessage());

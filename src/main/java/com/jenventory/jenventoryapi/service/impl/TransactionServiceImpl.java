@@ -1,14 +1,20 @@
 package com.jenventory.jenventoryapi.service.impl;
 
+import com.jenventory.jenventoryapi.dto.request.TransactionItemRequest;
+import com.jenventory.jenventoryapi.dto.request.TransactionPaymentRequest;
 import com.jenventory.jenventoryapi.dto.request.TransactionRequest;
 import com.jenventory.jenventoryapi.dto.response.TransactionResponse;
 import com.jenventory.jenventoryapi.dto.response.TransactionSummaryResponse;
-import com.jenventory.jenventoryapi.entity.Customer;
+import com.jenventory.jenventoryapi.entity.*;
+import com.jenventory.jenventoryapi.enums.DebtLedgerType;
+import com.jenventory.jenventoryapi.enums.PaymentMethod;
+import com.jenventory.jenventoryapi.enums.StockMovementReason;
+import com.jenventory.jenventoryapi.exception.BusinessRuleException;
 import com.jenventory.jenventoryapi.exception.ResourceNotFoundException;
-import com.jenventory.jenventoryapi.repository.CustomerRepository;
-import com.jenventory.jenventoryapi.repository.DebtLedgerRepository;
-import com.jenventory.jenventoryapi.repository.ProductVariantRepository;
-import com.jenventory.jenventoryapi.repository.TransactionRepository;
+import com.jenventory.jenventoryapi.mapper.TransactionItemMapper;
+import com.jenventory.jenventoryapi.mapper.TransactionMapper;
+import com.jenventory.jenventoryapi.mapper.TransactionPaymentMapper;
+import com.jenventory.jenventoryapi.repository.*;
 import com.jenventory.jenventoryapi.service.TransactionService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -16,6 +22,10 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigDecimal;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @Service
@@ -26,27 +36,163 @@ public class TransactionServiceImpl implements TransactionService {
     private final DebtLedgerRepository debtLedgerRepository;
     private final CustomerRepository customerRepository;
     private final ProductVariantRepository productVariantRepository;
+    private final TransactionMapper transactionMapper;
+    private final TransactionItemMapper transactionItemMapper;
+    private final TransactionItemRepository transactionItemRepository;
+    private final StockMovementRepository stockMovementRepository;
+    private final TransactionPaymentRepository transactionPaymentRepository;
+    private final TransactionPaymentMapper transactionPaymentMapper;
 
     @Override
     @Transactional
     public TransactionResponse create(TransactionRequest request) {
-        Customer customer = null;
+        Customer customer;
 
+        /*
+         * Resolve customer
+         */
         if (request.getCustomerId() != null) {
             customer = customerRepository.findByIdAndActiveTrue(request.getCustomerId())
                     .orElseThrow(() -> new ResourceNotFoundException("Active customer not found with id: " + request.getCustomerId()));
+        } else {
+            customer = null; // Walk-in customer
         }
 
+        /*
+         * Validate CREDIT_USED payment
+         */
+        request.getPayments().forEach(payment -> {
+            if (PaymentMethod.valueOf(payment.getPaymentMethod()) == PaymentMethod.CREDIT_USED) {
+                if (customer == null) {
+                    throw new BusinessRuleException("Walk-in customer cannot use credit.");
+                }
 
-        return null;
+                BigDecimal creditBalance = debtLedgerRepository.sumAmountByCustomerIdAndType(customer.getId(), DebtLedgerType.CREDIT)
+                        .subtract(debtLedgerRepository.sumAmountByCustomerIdAndType(customer.getId(), DebtLedgerType.CREDIT_USED));
+
+                if (creditBalance.compareTo(payment.getAmount()) < 0) {
+                    throw new BusinessRuleException("Insufficient credit balance. Available credit: " + creditBalance);
+                }
+            }
+        });
+
+        Map<Long, ProductVariant> productVariantMap = new HashMap<>();
+
+        /*
+         * Validate product variants and stock availability
+         */
+        request.getItems().forEach(item -> {
+            ProductVariant productVariant = productVariantRepository.findByIdAndActiveTrue(item.getProductVariantId())
+                    .orElseThrow(() -> new ResourceNotFoundException("Product variant not found with id: " + item.getProductVariantId()));
+
+            if (productVariant.getStockQuantity() < item.getQuantity()) {
+                throw new BusinessRuleException("Insufficient stock for sku: " + productVariant.getSku());
+            }
+
+            productVariantMap.put(item.getProductVariantId(), productVariant);
+        });
+
+        BigDecimal totalAmount = BigDecimal.ZERO;
+
+        for (TransactionItemRequest itemRequest : request.getItems()) {
+            ProductVariant productVariant = productVariantMap.get(itemRequest.getProductVariantId());
+            totalAmount = totalAmount.add(productVariant.getPrice().multiply(BigDecimal.valueOf(itemRequest.getQuantity())));
+        }
+
+        BigDecimal totalPaidAmount = request.getPayments().stream()
+                .map(TransactionPaymentRequest::getAmount)
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
+
+        BigDecimal difference = totalAmount.subtract(totalPaidAmount);
+
+        if (difference.compareTo(BigDecimal.ZERO) > 0) {
+            if (!request.isAllowDebt()) {
+                throw new BusinessRuleException("Underpayment. Enable allow debt to put remainder on debt.");
+            }
+            if (customer == null) {
+                throw new BusinessRuleException("Cannot create debt for walk-in customer.");
+            }
+        }
+
+        Transaction transaction = transactionRepository.save(transactionMapper.toEntity(request, customer, totalAmount));
+
+        request.getItems().forEach(item -> {
+            ProductVariant productVariant = productVariantMap.get(item.getProductVariantId());
+
+            transactionItemRepository.save(transactionItemMapper.toEntity(item, transaction, productVariant));
+
+            productVariant.deductStock(item.getQuantity());
+            productVariantRepository.save(productVariant);
+
+            stockMovementRepository.save(StockMovement.builder()
+                    .variant(productVariant)
+                    .transaction(transaction)
+                    .quantityChange(-item.getQuantity())
+                    .reason(StockMovementReason.SOLD)
+                    .build());
+        });
+
+        request.getPayments().forEach(payment -> {
+            if (PaymentMethod.valueOf(payment.getPaymentMethod()) == PaymentMethod.CREDIT_USED) {
+                debtLedgerRepository.save(DebtLedger.builder()
+                        .customer(customer)
+                        .transaction(transaction)
+                        .type(DebtLedgerType.CREDIT_USED)
+                        .amount(payment.getAmount())
+                        .build());
+            }
+            transactionPaymentRepository.save(transactionPaymentMapper.toEntity(payment, transaction));
+        });
+
+        /*
+         * DEBT: underpayment
+         */
+        if (difference.compareTo(BigDecimal.ZERO) > 0 && request.isAllowDebt()) {
+            debtLedgerRepository.save(DebtLedger.builder()
+                    .customer(customer)
+                    .transaction(transaction)
+                    .type(DebtLedgerType.DEBT)
+                    .amount(difference.abs())
+                    .build());
+        }
+
+        /*
+         * CREDIT: overpayment
+         */
+        if (difference.compareTo(BigDecimal.ZERO) < 0 && request.isStoreChangeAsCredit()) {
+            debtLedgerRepository.save(DebtLedger.builder()
+                    .customer(customer)
+                    .transaction(transaction)
+                    .type(DebtLedgerType.CREDIT)
+                    .amount(difference.abs())
+                    .build());
+        }
+
+        List<TransactionItem> savedItems = transactionItemRepository.findAllByTransactionId(transaction.getId());
+        List<TransactionPayment> savedPayments = transactionPaymentRepository.findAllByTransactionId(transaction.getId());
+
+        return TransactionResponse.builder()
+                .id(transaction.getId())
+                .customerId(customer != null ? customer.getId() : null)
+                .customerName(customer != null ? customer.getName() : null)
+                .representative(transaction.getRepresentative())
+                .notes(transaction.getNotes())
+                .totalAmount(totalAmount)
+                .items(savedItems.stream().map(transactionItemMapper::toResponse).toList())
+                .payments(savedPayments.stream().map(transactionPaymentMapper::toResponse).toList())
+                .createdAt(transaction.getCreatedAt())
+                .build();
     }
 
     @Override
+    @Transactional(readOnly = true)
     public Page<TransactionSummaryResponse> getAll(Pageable pageable) {
-        return null;
+        return transactionRepository.findAll(pageable)
+                .map(transactionMapper::toSummaryResponse);
     }
 
     @Override
+    @Transactional(readOnly = true)
     public Optional<TransactionResponse> findById(Long id) {
         return Optional.empty();
     }
@@ -55,4 +201,5 @@ public class TransactionServiceImpl implements TransactionService {
     public Page<TransactionSummaryResponse> getCustomerTransactions(Long customerId, Pageable pageable) {
         return null;
     }
+
 }

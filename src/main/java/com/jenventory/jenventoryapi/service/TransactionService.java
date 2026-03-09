@@ -18,5 +18,4 @@ public interface TransactionService {
 
     Page<TransactionSummaryResponse> getCustomerTransactions(Long customerId, Pageable pageable);
 
-
 }
