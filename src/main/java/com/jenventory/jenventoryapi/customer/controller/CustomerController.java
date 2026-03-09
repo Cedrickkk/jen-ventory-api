@@ -6,7 +6,7 @@ import com.jenventory.jenventoryapi.customer.dto.response.CustomerTransactionRes
 import com.jenventory.jenventoryapi.customer.service.CustomerService;
 import com.jenventory.jenventoryapi.dto.response.ApiResponseUtil;
 import com.jenventory.jenventoryapi.dto.response.SuccessApiResponse;
-import com.jenventory.jenventoryapi.service.TransactionService;
+import com.jenventory.jenventoryapi.transaction.service.TransactionService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

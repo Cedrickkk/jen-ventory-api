@@ -1,12 +1,14 @@
-package com.jenventory.jenventoryapi.product.entity;
+package com.jenventory.jenventoryapi.transaction.entity;
 
-import com.jenventory.jenventoryapi.transaction.entity.Transaction;
-import com.jenventory.jenventoryapi.product.enums.StockMovementReason;
+import com.jenventory.jenventoryapi.customer.entity.Customer;
+import com.jenventory.jenventoryapi.transaction.enums.DebtLedgerType;
+import com.jenventory.jenventoryapi.transaction.enums.PaymentMethod;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 @Builder
@@ -15,29 +17,32 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 @Entity
-@Table(name = "stock_movements")
-public class StockMovement {
+@Table(name = "debt_ledgers")
+public class DebtLedger {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "variant_id", nullable = false)
-    private ProductVariant variant;
+    @JoinColumn(name = "customer_id", nullable = false)
+    private Customer customer;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "transaction_id")
     private Transaction transaction;
 
     @NotNull
-    @Enumerated(EnumType.STRING)
-    @Column(name = "reason", nullable = false)
-    private StockMovementReason reason;
+    @Column(name = "amount", nullable = false)
+    private BigDecimal amount;
 
     @NotNull
-    @Column(name = "quantity_change", nullable = false)
-    private Integer quantityChange;
+    @Enumerated(EnumType.STRING)
+    @Column(name = "type", nullable = false)
+    private DebtLedgerType type;
+
+    @Column(name = "payment_method")
+    private PaymentMethod paymentMethod;
 
     @Column(name = "notes", columnDefinition = "TEXT")
     private String notes;

@@ -4,7 +4,7 @@ import com.jenventory.jenventoryapi.customer.dto.request.CustomerRequest;
 import com.jenventory.jenventoryapi.customer.dto.response.CustomerResponse;
 import com.jenventory.jenventoryapi.customer.dto.response.CustomerTransactionResponse;
 import com.jenventory.jenventoryapi.customer.entity.Customer;
-import com.jenventory.jenventoryapi.entity.Transaction;
+import com.jenventory.jenventoryapi.transaction.entity.Transaction;
 import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;

@@ -1,6 +1,6 @@
 package com.jenventory.jenventoryapi.product.mapper;
 
-import com.jenventory.jenventoryapi.entity.Transaction;
+import com.jenventory.jenventoryapi.transaction.entity.Transaction;
 import com.jenventory.jenventoryapi.product.dto.response.StockMovementResponse;
 import com.jenventory.jenventoryapi.product.entity.ProductVariant;
 import com.jenventory.jenventoryapi.product.entity.StockMovement;
