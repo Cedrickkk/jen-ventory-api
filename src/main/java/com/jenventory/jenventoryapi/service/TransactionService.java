@@ -1,6 +1,7 @@
 package com.jenventory.jenventoryapi.service;
 
 import com.jenventory.jenventoryapi.dto.request.TransactionRequest;
+import com.jenventory.jenventoryapi.dto.response.CustomerTransactionResponse;
 import com.jenventory.jenventoryapi.dto.response.TransactionResponse;
 import com.jenventory.jenventoryapi.dto.response.TransactionSummaryResponse;
 import org.springframework.data.domain.Page;
@@ -14,6 +15,6 @@ public interface TransactionService {
 
     TransactionResponse findById(Long id);
 
-    Page<TransactionSummaryResponse> getCustomerTransactions(Long customerId, Pageable pageable);
+    Page<CustomerTransactionResponse> getCustomerTransactions(Long customerId, Pageable pageable);
 
 }
