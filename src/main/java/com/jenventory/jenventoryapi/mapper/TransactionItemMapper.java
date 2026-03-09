@@ -2,9 +2,9 @@ package com.jenventory.jenventoryapi.mapper;
 
 import com.jenventory.jenventoryapi.dto.request.TransactionItemRequest;
 import com.jenventory.jenventoryapi.dto.response.TransactionItemResponse;
-import com.jenventory.jenventoryapi.entity.ProductVariant;
 import com.jenventory.jenventoryapi.entity.Transaction;
 import com.jenventory.jenventoryapi.entity.TransactionItem;
+import com.jenventory.jenventoryapi.product.entity.ProductVariant;
 import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
