@@ -1,6 +1,6 @@
 package com.jenventory.jenventoryapi.validation;
 
-import com.jenventory.jenventoryapi.annotation.ValidEnum;
+import com.jenventory.jenventoryapi.common.annotation.ValidEnum;
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
 

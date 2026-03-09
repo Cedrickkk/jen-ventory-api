@@ -1,6 +1,6 @@
 package com.jenventory.jenventoryapi.dto.request;
 
-import com.jenventory.jenventoryapi.annotation.ValidEnum;
+import com.jenventory.jenventoryapi.common.annotation.ValidEnum;
 import com.jenventory.jenventoryapi.enums.AdjustmentDirection;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;

@@ -1,6 +1,6 @@
 package com.jenventory.jenventoryapi.dto.request;
 
-import com.jenventory.jenventoryapi.annotation.ValidEnum;
+import com.jenventory.jenventoryapi.common.annotation.ValidEnum;
 import com.jenventory.jenventoryapi.enums.PaymentMethod;
 import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
