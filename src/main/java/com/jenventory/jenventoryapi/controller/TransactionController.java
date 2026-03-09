@@ -42,5 +42,15 @@ public class TransactionController {
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
+    @GetMapping("/{id}")
+    public ResponseEntity<SuccessApiResponse<TransactionResponse>> getById(@PathVariable Long id) {
+        TransactionResponse transactionResponse = transactionService.findById(id);
+
+        SuccessApiResponse<TransactionResponse> response =
+                ApiResponseUtil.success(transactionResponse, "Transaction retrieved successfully");
+
+        return ResponseEntity.ok(response);
+    }
+
 
 }
