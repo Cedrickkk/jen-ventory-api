@@ -2,6 +2,7 @@ package com.jenventory.jenventoryapi.transaction.mapper;
 
 import com.jenventory.jenventoryapi.customer.entity.Customer;
 import com.jenventory.jenventoryapi.transaction.dto.response.DebtLedgerResponse;
+import com.jenventory.jenventoryapi.transaction.dto.response.DebtSummaryResponse;
 import com.jenventory.jenventoryapi.transaction.entity.DebtLedger;
 import com.jenventory.jenventoryapi.transaction.entity.Transaction;
 import com.jenventory.jenventoryapi.transaction.enums.DebtLedgerType;
@@ -37,6 +38,21 @@ public class DebtLedgerMapper {
                 .notes(debtLedger.getNotes())
                 .amount(debtLedger.getAmount())
                 .createdAt(debtLedger.getCreatedAt())
+                .build();
+    }
+
+    public DebtSummaryResponse toSummaryResponse(
+            BigDecimal totalDebt, BigDecimal totalCredit,
+            BigDecimal totalPaid, BigDecimal creditUsed,
+            BigDecimal netDebt, BigDecimal netCredit
+    ) {
+        return DebtSummaryResponse.builder()
+                .totalDebt(totalDebt)
+                .totalCredit(totalCredit)
+                .totalPaid(totalPaid)
+                .creditUsed(creditUsed)
+                .netDebt(netDebt)
+                .netCredit(netCredit)
                 .build();
     }
 
