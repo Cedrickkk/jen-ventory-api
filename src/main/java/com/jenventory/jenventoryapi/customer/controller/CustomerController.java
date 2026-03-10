@@ -6,6 +6,8 @@ import com.jenventory.jenventoryapi.customer.dto.request.CustomerRequest;
 import com.jenventory.jenventoryapi.customer.dto.response.CustomerResponse;
 import com.jenventory.jenventoryapi.customer.dto.response.CustomerTransactionResponse;
 import com.jenventory.jenventoryapi.customer.service.CustomerService;
+import com.jenventory.jenventoryapi.gcash.dto.response.GCashServiceLogResponse;
+import com.jenventory.jenventoryapi.gcash.service.GCashService;
 import com.jenventory.jenventoryapi.transaction.service.TransactionService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -26,6 +28,7 @@ public class CustomerController {
 
     private final CustomerService customerService;
     private final TransactionService transactionService;
+    private final GCashService gCashService;
 
     @GetMapping
     public ResponseEntity<SuccessApiResponse<Page<CustomerResponse>>> getAll(Pageable pageable) {
@@ -115,4 +118,15 @@ public class CustomerController {
 
         return ResponseEntity.ok(response);
     }
+
+    @GetMapping("/{id}/gcash")
+    public ResponseEntity<SuccessApiResponse<Page<GCashServiceLogResponse>>> getGCashTransactionsForCustomer(@PathVariable Long id, Pageable pageable) {
+        Page<GCashServiceLogResponse> customerGCashHistory = gCashService.getCustomerGCashHistory(id, pageable);
+
+        SuccessApiResponse<Page<GCashServiceLogResponse>> response =
+                ApiResponseUtil.success(customerGCashHistory, "Customer GCash transactions retrieved successfully");
+
+        return ResponseEntity.ok(response);
+    }
+
 }
