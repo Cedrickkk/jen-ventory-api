@@ -1,4 +1,4 @@
-package com.jenventory.jenventoryapi.common.config;
+package com.jenventory.jenventoryapi.auth.config;
 
 import com.jenventory.jenventoryapi.auth.entity.ApplicationUserDetails;
 import com.jenventory.jenventoryapi.auth.filter.JwtAuthenticationFilter;
