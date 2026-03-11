@@ -74,11 +74,12 @@ public class CustomerController {
         return ResponseEntity.ok(response);
     }
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<SuccessApiResponse<Void>> delete(@PathVariable Long id) {
-        customerService.deactivate(id);
+    @PatchMapping("/{id}/deactivate")
+    public ResponseEntity<SuccessApiResponse<CustomerResponse>> deactivate(@PathVariable Long id) {
+        CustomerResponse customer = customerService.deactivate(id);
 
-        SuccessApiResponse<Void> response = ApiResponseUtil.noContent("Customer deactivated successfully");
+        SuccessApiResponse<CustomerResponse> response =
+                ApiResponseUtil.success(customer, "Customer deactivated successfully");
 
         return ResponseEntity.ok(response);
     }
