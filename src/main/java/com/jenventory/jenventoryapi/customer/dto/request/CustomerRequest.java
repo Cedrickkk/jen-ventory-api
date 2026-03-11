@@ -25,4 +25,6 @@ public class CustomerRequest {
     @NotBlank(message = "Customer address is required.")
     private String address;
 
+    private boolean active;
+
 }

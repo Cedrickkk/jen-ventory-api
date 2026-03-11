@@ -17,6 +17,7 @@ public class CustomerMapper {
                 .name(request.getName())
                 .phone(request.getPhone())
                 .address(request.getAddress())
+                .active(request.isActive())
                 .build();
     }
 
