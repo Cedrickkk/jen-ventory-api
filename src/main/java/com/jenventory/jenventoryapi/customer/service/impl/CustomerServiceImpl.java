@@ -28,7 +28,7 @@ public class CustomerServiceImpl implements CustomerService {
     @Override
     @Transactional(readOnly = true)
     public Page<CustomerResponse> getAll(Pageable pageable) {
-        return customerRepository.findAllByActiveTrue(pageable)
+        return customerRepository.findAll(pageable)
                 .map(customerMapper::toResponse);
     }
 
@@ -77,12 +77,14 @@ public class CustomerServiceImpl implements CustomerService {
 
     @Override
     @Transactional
-    public void deactivate(Long id) {
+    public CustomerResponse deactivate(Long id) {
         Customer customer = customerRepository.findByIdAndActiveTrue(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Active customer not found with id: " + id));
 
         customer.setActive(false);
         customerRepository.save(customer);
+
+        return customerMapper.toResponse(customer);
     }
 
     @Override

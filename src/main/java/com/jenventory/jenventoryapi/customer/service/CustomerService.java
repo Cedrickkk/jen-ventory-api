@@ -19,7 +19,7 @@ public interface CustomerService {
 
     CustomerResponse update(Long id, CustomerRequest request);
 
-    void deactivate(Long id);
+    CustomerResponse deactivate(Long id);
 
     CustomerResponse reactivate(Long id);
 }
