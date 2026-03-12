@@ -44,6 +44,7 @@ public class CustomerMapper {
                 .debtAmount(debtAmount)
                 .creditAmount(creditAmount)
                 .itemCount(transaction.getItems().size())
+                .createdAt(transaction.getCreatedAt())
                 .build();
     }
 

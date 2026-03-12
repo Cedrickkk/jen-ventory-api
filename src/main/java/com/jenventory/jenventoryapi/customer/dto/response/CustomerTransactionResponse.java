@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 
 @Data
 @AllArgsConstructor
@@ -22,5 +23,6 @@ public class CustomerTransactionResponse {
     /* How much stored as credit */
     private BigDecimal creditAmount;
     private Integer itemCount;
+    private LocalDateTime createdAt;
 
 }

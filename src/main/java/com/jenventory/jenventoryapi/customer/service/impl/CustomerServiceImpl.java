@@ -35,7 +35,7 @@ public class CustomerServiceImpl implements CustomerService {
     @Override
     @Transactional(readOnly = true)
     public CustomerResponse findById(Long id) {
-        Customer customer = customerRepository.findByIdAndActiveTrue(id)
+        Customer customer = customerRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Customer not found with id: " + id));
 
         return customerMapper.toResponse(customer);
