@@ -23,6 +23,7 @@ public class TransactionPaymentMapper {
                 .id(transactionPayment.getId())
                 .method(transactionPayment.getMethod())
                 .amount(transactionPayment.getAmount())
+                .createdAt(transactionPayment.getCreatedAt())
                 .build();
     }
 
