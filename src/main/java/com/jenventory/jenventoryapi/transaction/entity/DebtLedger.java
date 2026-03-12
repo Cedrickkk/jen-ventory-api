@@ -41,6 +41,7 @@ public class DebtLedger {
     @Column(name = "type", nullable = false)
     private DebtLedgerType type;
 
+    @Enumerated(EnumType.STRING)
     @Column(name = "payment_method")
     private PaymentMethod paymentMethod;
 
