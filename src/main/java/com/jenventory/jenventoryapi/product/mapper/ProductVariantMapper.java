@@ -24,6 +24,7 @@ public class ProductVariantMapper {
         return ProductVariantResponse.builder()
                 .id(variant.getId())
                 .productId(variant.getProduct().getId())
+                .productName(variant.getProduct().getName())
                 .sku(variant.getSku())
                 .price(variant.getPrice())
                 .size(variant.getSize())

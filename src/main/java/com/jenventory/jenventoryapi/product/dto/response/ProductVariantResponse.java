@@ -16,6 +16,7 @@ public class ProductVariantResponse {
 
     private Long id;
     private Long productId;
+    private String productName;
     private String sku;
     private BigDecimal price;
     private String size;
