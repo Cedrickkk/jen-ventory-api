@@ -17,6 +17,8 @@ public class ProductResponse {
     private String name;
     private boolean active;
     private String description;
+    @Builder.Default
+    private Integer variantCount = 0;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 

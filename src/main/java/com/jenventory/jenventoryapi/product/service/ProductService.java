@@ -19,7 +19,7 @@ public interface ProductService {
 
     ProductResponse update(Long id, ProductRequest request);
 
-    void deactivate(Long id);
+    ProductResponse deactivate(Long id);
 
     ProductResponse reactivate(Long id);
 

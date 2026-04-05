@@ -7,6 +7,7 @@ import com.jenventory.jenventoryapi.product.dto.response.ProductResponse;
 import com.jenventory.jenventoryapi.product.entity.Product;
 import com.jenventory.jenventoryapi.product.mapper.ProductMapper;
 import com.jenventory.jenventoryapi.product.repository.ProductRepository;
+import com.jenventory.jenventoryapi.product.repository.ProductVariantRepository;
 import com.jenventory.jenventoryapi.product.service.ProductService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -22,12 +23,16 @@ public class ProductServiceImpl implements ProductService {
 
     private final ProductRepository productRepository;
     private final ProductMapper productMapper;
+    private final ProductVariantRepository productVariantRepository;
 
     @Override
     @Transactional(readOnly = true)
     public Page<ProductResponse> getAll(Pageable pageable) {
-        return productRepository.findAll(pageable)
-                .map(productMapper::toResponse);
+        return productRepository.findAllWithVariantCount(pageable)
+                .map(product -> productMapper.toResponseWithVariantCount(
+                        product.getProduct(),
+                        product.getVariantCount().intValue()
+                ));
     }
 
     @Override
@@ -36,7 +41,9 @@ public class ProductServiceImpl implements ProductService {
         Product product = productRepository.findByIdAndActiveTrue(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Product not found with id: " + id));
 
-        return productMapper.toResponse(product);
+        int variantCount = productVariantRepository.countByProductId(id);
+
+        return productMapper.toResponseWithVariantCount(product, variantCount);
     }
 
     @Override
@@ -65,19 +72,25 @@ public class ProductServiceImpl implements ProductService {
         product.setDescription(request.getDescription());
         productRepository.save(product);
 
-        return productMapper.toResponse(product);
+        int variantCount = productVariantRepository.countByProductId(id);
+
+        return productMapper.toResponseWithVariantCount(product, variantCount);
     }
 
 
     @Override
     @Transactional
-    public void deactivate(Long id) {
+    public ProductResponse deactivate(Long id) {
         Product product = productRepository.findByIdAndActiveTrue(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Active product not found with id: " + id));
 
         product.setActive(false);
 
         productRepository.save(product);
+
+        int variantCount = productVariantRepository.countByProductId(id);
+
+        return productMapper.toResponseWithVariantCount(product, variantCount);
     }
 
     @Override

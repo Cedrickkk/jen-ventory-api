@@ -19,4 +19,5 @@ public interface ProductVariantRepository extends JpaRepository<ProductVariant, 
 
     boolean existsBySkuAndIdNot(String sku, Long id);
 
+    int countByProductId(Long productId);
 }

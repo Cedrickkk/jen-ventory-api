@@ -26,4 +26,16 @@ public class ProductMapper {
                 .build();
     }
 
+    public ProductResponse toResponseWithVariantCount(Product product, int variantCount) {
+        return ProductResponse.builder()
+                .id(product.getId())
+                .name(product.getName())
+                .description(product.getDescription())
+                .active(product.isActive())
+                .createdAt(product.getCreatedAt())
+                .updatedAt(product.getUpdatedAt())
+                .variantCount(variantCount)
+                .build();
+    }
+
 }

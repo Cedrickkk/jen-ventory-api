@@ -28,4 +28,12 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
             """)
     List<Product> search(@Param("query") String query);
 
+    @Query("""
+            SELECT p as product, COUNT(pv.id) as variantCount
+            FROM Product p
+            LEFT JOIN ProductVariant pv ON pv.product.id = p.id
+            GROUP BY p.id
+            """)
+    Page<ProductWithVariantCount> findAllWithVariantCount(Pageable pageable);
+
 }
