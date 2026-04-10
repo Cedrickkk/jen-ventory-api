@@ -3,6 +3,7 @@ package com.jenventory.jenventoryapi.product.service.impl;
 import com.jenventory.jenventoryapi.common.exception.DuplicateResourceException;
 import com.jenventory.jenventoryapi.common.exception.ResourceNotFoundException;
 import com.jenventory.jenventoryapi.product.dto.request.ProductVariantRequest;
+import com.jenventory.jenventoryapi.product.dto.request.ProductVariantUpdateRequest;
 import com.jenventory.jenventoryapi.product.dto.response.ProductVariantResponse;
 import com.jenventory.jenventoryapi.product.entity.Product;
 import com.jenventory.jenventoryapi.product.entity.ProductVariant;
@@ -59,15 +60,10 @@ public class ProductVariantServiceImpl implements ProductVariantService {
 
     @Override
     @Transactional
-    public ProductVariantResponse update(Long id, ProductVariantRequest request) {
+    public ProductVariantResponse update(Long id, ProductVariantUpdateRequest request) {
         ProductVariant productVariant = productVariantRepository.findByIdAndActiveTrue(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Product variant not found with id: " + id));
 
-        if (productVariantRepository.existsBySkuAndIdNot(request.getSku(), id)) {
-            throw new DuplicateResourceException("Product variant with sku " + request.getSku() + " already exists.");
-        }
-
-        productVariant.setSku(request.getSku());
         productVariant.setPrice(request.getPrice());
         productVariant.setSize(request.getSize());
         productVariant.setFlavor(request.getFlavor());

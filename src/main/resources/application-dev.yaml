@@ -2,29 +2,33 @@ spring:
   application:
     name: jen-ventory-api
   datasource:
-    url: jdbc:postgresql://localhost:5432/database_name
-    username: username
-    password: password
+    url: jdbc:postgresql://localhost:5432/jenventory_db
+    username: postgres
+    password: admin
     driver-class-name: org.postgresql.Driver
   data:
     web:
       pageable:
-        default-page-size: 5
+        default-page-size: 40
         max-page-size: 50
         one-indexed-parameters: true
   jpa:
     hibernate:
-      ddl-auto: update
+      ddl-auto: create-drop
     show-sql: true
     properties:
       hibernate:
         format_sql: true
     open-in-view: false
+    defer-datasource-initialization: true
+  sql:
+    init:
+      mode: always
 
 security:
   jwt:
-    secret: your-secret-key
+    secret: 7x30SB3Mh6VCnRspvti4xt9egccp44hunKo383xvyCp
     access-token:
-      expiration: 900000 # 15 minutes
+      expiration: 3600000
     refresh-token:
-      expiration: 604800000 # 7 days
+      expiration: 604800000

@@ -2,10 +2,7 @@ package com.jenventory.jenventoryapi.product.controller;
 
 import com.jenventory.jenventoryapi.common.dto.response.ApiResponseUtil;
 import com.jenventory.jenventoryapi.common.dto.response.SuccessApiResponse;
-import com.jenventory.jenventoryapi.product.dto.request.AdjustmentRequest;
-import com.jenventory.jenventoryapi.product.dto.request.ProductVariantRequest;
-import com.jenventory.jenventoryapi.product.dto.request.RestockRequest;
-import com.jenventory.jenventoryapi.product.dto.request.ReturnRequest;
+import com.jenventory.jenventoryapi.product.dto.request.*;
 import com.jenventory.jenventoryapi.product.dto.response.ProductVariantResponse;
 import com.jenventory.jenventoryapi.product.dto.response.StockMovementResponse;
 import com.jenventory.jenventoryapi.product.enums.StockMovementReason;
@@ -64,7 +61,7 @@ public class ProductVariantController {
 
     @PutMapping("/{id}")
     public ResponseEntity<SuccessApiResponse<ProductVariantResponse>> update(
-            @PathVariable Long productId, @PathVariable Long id, @Valid @RequestBody ProductVariantRequest request) {
+            @PathVariable Long productId, @PathVariable Long id, @Valid @RequestBody ProductVariantUpdateRequest request) {
 
         ProductVariantResponse product = productVariantService.update(id, request);
 

@@ -1,6 +1,7 @@
 package com.jenventory.jenventoryapi.product.service;
 
 import com.jenventory.jenventoryapi.product.dto.request.ProductVariantRequest;
+import com.jenventory.jenventoryapi.product.dto.request.ProductVariantUpdateRequest;
 import com.jenventory.jenventoryapi.product.dto.response.ProductVariantResponse;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -13,7 +14,7 @@ public interface ProductVariantService {
 
     Page<ProductVariantResponse> getAll(Long productId, Pageable pageable);
 
-    ProductVariantResponse update(Long id, ProductVariantRequest request);
+    ProductVariantResponse update(Long id, ProductVariantUpdateRequest request);
 
     void deactivate(Long productId, Long id);
 
