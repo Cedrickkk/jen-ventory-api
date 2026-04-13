@@ -20,7 +20,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/v1/gcash")
 @RequiredArgsConstructor
-public class GCashFeeTierController {
+public class GCashController {
 
     private final GCashService gcashService;
 
