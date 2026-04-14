@@ -26,4 +26,6 @@ public interface GCashService {
     GCashServiceLogResponse findServiceLogById(Long id);
 
     Page<GCashServiceLogResponse> getCustomerGCashHistory(Long customerId, Pageable pageable);
+
+    Page<GCashServiceLogResponse> search(String query, Pageable pageable);
 }

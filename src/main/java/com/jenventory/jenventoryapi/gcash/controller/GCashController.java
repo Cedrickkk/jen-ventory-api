@@ -92,4 +92,16 @@ public class GCashController {
 
         return ResponseEntity.ok(response);
     }
+
+    @GetMapping("/transactions/search")
+    public ResponseEntity<SuccessApiResponse<Page<GCashServiceLogResponse>>> search(
+            @RequestParam(name = "query", required = false, defaultValue = "") String query, Pageable pageable) {
+
+        Page<GCashServiceLogResponse> products = gcashService.search(query, pageable);
+
+        SuccessApiResponse<Page<GCashServiceLogResponse>> response =
+                ApiResponseUtil.success(products, "Result for search query: " + query);
+
+        return ResponseEntity.ok(response);
+    }
 }

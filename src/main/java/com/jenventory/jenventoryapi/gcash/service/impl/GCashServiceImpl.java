@@ -134,4 +134,15 @@ public class GCashServiceImpl implements GCashService {
         return gCashServiceLogRepository.findAllByCustomerId(customerId, pageable)
                 .map(gCashServiceLogMapper::toResponse);
     }
+
+    @Override
+    public Page<GCashServiceLogResponse> search(String query, Pageable pageable) {
+        if (query == null || query.isBlank()) {
+            return Page.empty(pageable);
+        }
+
+        Page<GCashServiceLog> serviceLogs = gCashServiceLogRepository.search(query.trim(), pageable);
+
+        return serviceLogs.map(gCashServiceLogMapper::toResponse);
+    }
 }
