@@ -104,7 +104,6 @@ public class GCashServiceImpl implements GCashService {
                 .orElseThrow(() -> new BusinessRuleException("No fee tier found for the specified amount: " + request.getAmount()))
                 .getFee();
 
-
         GCashServiceLog gCashServiceLog = gCashServiceLogRepository.save(gCashServiceLogMapper.toEntity(request, customer, gCashTierFee));
 
         return gCashServiceLogMapper.toResponse(gCashServiceLog);
