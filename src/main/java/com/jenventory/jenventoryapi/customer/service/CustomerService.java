@@ -4,12 +4,13 @@ import com.jenventory.jenventoryapi.customer.dto.request.CustomerRequest;
 import com.jenventory.jenventoryapi.customer.dto.response.CustomerResponse;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
 public interface CustomerService {
 
-    CustomerResponse create(CustomerRequest request);
+    CustomerResponse create(CustomerRequest request, MultipartFile image);
 
     CustomerResponse findById(Long id);
 

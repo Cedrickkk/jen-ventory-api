@@ -8,12 +8,14 @@ import com.jenventory.jenventoryapi.customer.entity.Customer;
 import com.jenventory.jenventoryapi.customer.mapper.CustomerMapper;
 import com.jenventory.jenventoryapi.customer.repository.CustomerRepository;
 import com.jenventory.jenventoryapi.customer.service.CustomerService;
+import com.jenventory.jenventoryapi.file.service.StorageService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -24,6 +26,8 @@ public class CustomerServiceImpl implements CustomerService {
 
     private final CustomerRepository customerRepository;
     private final CustomerMapper customerMapper;
+    private final StorageService storageService;
+
 
     @Override
     @Transactional(readOnly = true)
@@ -44,7 +48,7 @@ public class CustomerServiceImpl implements CustomerService {
 
     @Override
     @Transactional
-    public CustomerResponse create(CustomerRequest request) {
+    public CustomerResponse create(CustomerRequest request, MultipartFile image) {
         if (customerRepository.existsByPhone(request.getPhone())) {
             throw new DuplicateResourceException("Customer with phone number " + request.getPhone() + " already exists.");
         }
@@ -52,6 +56,8 @@ public class CustomerServiceImpl implements CustomerService {
         Customer _customer = customerMapper.toEntity(request);
 
         Customer customer = customerRepository.save(_customer);
+
+        storageService.store(image);
 
         return customerMapper.toResponse(customer);
     }

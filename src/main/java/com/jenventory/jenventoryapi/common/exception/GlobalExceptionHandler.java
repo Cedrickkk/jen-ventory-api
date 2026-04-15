@@ -80,5 +80,11 @@ public class GlobalExceptionHandler {
         ErrorApiResponse<Void> response = ApiResponseUtil.unauthorized(ex.getMessage());
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(response);
     }
+    
+    @ExceptionHandler(StorageException.class)
+    public ResponseEntity<ErrorApiResponse<Void>> handleStorageException(StorageException ex) {
+        ErrorApiResponse<Void> response = ApiResponseUtil.unauthorized(ex.getMessage());
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+    }
 
 }

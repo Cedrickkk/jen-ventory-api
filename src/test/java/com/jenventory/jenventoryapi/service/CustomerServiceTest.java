@@ -89,7 +89,7 @@ class CustomerServiceTest {
         given(customerMapper.toResponse(savedEntity)).willReturn(expectedResponse);
 
         // when
-        CustomerResponse response = customerService.create(request);
+        CustomerResponse response = customerService.create(request, null);
 
         // then
         assertThat(response).isNotNull();
@@ -116,7 +116,7 @@ class CustomerServiceTest {
         given(customerMapper.toResponse(savedEntity)).willReturn(buildCustomerResponse(1L));
 
         // when
-        customerService.create(request);
+        customerService.create(request, null);
 
         // then
         verify(customerRepository, times(1)).save(any(Customer.class));
