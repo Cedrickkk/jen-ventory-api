@@ -1,10 +1,10 @@
 package com.jenventory.jenventoryapi.transaction.mapper;
 
+import com.jenventory.jenventoryapi.product.entity.ProductVariant;
 import com.jenventory.jenventoryapi.transaction.dto.request.TransactionItemRequest;
 import com.jenventory.jenventoryapi.transaction.dto.response.TransactionItemResponse;
 import com.jenventory.jenventoryapi.transaction.entity.Transaction;
 import com.jenventory.jenventoryapi.transaction.entity.TransactionItem;
-import com.jenventory.jenventoryapi.product.entity.ProductVariant;
 import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
@@ -24,6 +24,7 @@ public class TransactionItemMapper {
     public TransactionItemResponse toResponse(TransactionItem transactionItem) {
         return TransactionItemResponse.builder()
                 .id(transactionItem.getId())
+                .productId(transactionItem.getProductVariant().getProduct().getId())
                 .productVariantId(transactionItem.getProductVariant().getId())
                 .productVariantName(transactionItem.getProductVariant().getProduct().getName())
                 .sku(transactionItem.getProductVariant().getSku())
