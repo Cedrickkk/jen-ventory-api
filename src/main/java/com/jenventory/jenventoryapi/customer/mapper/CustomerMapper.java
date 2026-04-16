@@ -28,6 +28,7 @@ public class CustomerMapper {
                 .phone(customer.getPhone())
                 .address(customer.getAddress())
                 .active(customer.isActive())
+                .image(customer.getImage() != null ? customer.getImage().getStoredFilename() : null)
                 .createdAt(customer.getCreatedAt())
                 .updatedAt(customer.getUpdatedAt())
                 .build();

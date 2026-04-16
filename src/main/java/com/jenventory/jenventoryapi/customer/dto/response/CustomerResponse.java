@@ -17,9 +17,9 @@ public class CustomerResponse {
     private String name;
     private String phone;
     private String address;
+    private String image;
     private boolean active;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
-
 
 }

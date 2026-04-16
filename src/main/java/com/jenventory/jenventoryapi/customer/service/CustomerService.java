@@ -2,6 +2,7 @@ package com.jenventory.jenventoryapi.customer.service;
 
 import com.jenventory.jenventoryapi.customer.dto.request.CustomerRequest;
 import com.jenventory.jenventoryapi.customer.dto.response.CustomerResponse;
+import jakarta.annotation.Nullable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.web.multipart.MultipartFile;
@@ -10,7 +11,7 @@ import java.util.List;
 
 public interface CustomerService {
 
-    CustomerResponse create(CustomerRequest request, MultipartFile image);
+    CustomerResponse create(CustomerRequest request, @Nullable MultipartFile image);
 
     CustomerResponse findById(Long id);
 

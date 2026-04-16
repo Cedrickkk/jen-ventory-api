@@ -8,7 +8,11 @@ import com.jenventory.jenventoryapi.customer.entity.Customer;
 import com.jenventory.jenventoryapi.customer.mapper.CustomerMapper;
 import com.jenventory.jenventoryapi.customer.repository.CustomerRepository;
 import com.jenventory.jenventoryapi.customer.service.CustomerService;
+import com.jenventory.jenventoryapi.file.entity.File;
+import com.jenventory.jenventoryapi.file.enums.FileType;
+import com.jenventory.jenventoryapi.file.service.FileService;
 import com.jenventory.jenventoryapi.file.service.StorageService;
+import jakarta.annotation.Nullable;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -27,6 +31,7 @@ public class CustomerServiceImpl implements CustomerService {
     private final CustomerRepository customerRepository;
     private final CustomerMapper customerMapper;
     private final StorageService storageService;
+    private final FileService fileService;
 
 
     @Override
@@ -48,16 +53,17 @@ public class CustomerServiceImpl implements CustomerService {
 
     @Override
     @Transactional
-    public CustomerResponse create(CustomerRequest request, MultipartFile image) {
+    public CustomerResponse create(CustomerRequest request, @Nullable MultipartFile image) {
         if (customerRepository.existsByPhone(request.getPhone())) {
             throw new DuplicateResourceException("Customer with phone number " + request.getPhone() + " already exists.");
         }
 
-        Customer _customer = customerMapper.toEntity(request);
+        Customer customer = customerRepository.save(customerMapper.toEntity(request));
 
-        Customer customer = customerRepository.save(_customer);
-
-        storageService.store(image);
+        if (image != null && !image.isEmpty()) {
+            File imageFile = fileService.create(image, FileType.IMAGE);
+            customer.setImage(imageFile);
+        }
 
         return customerMapper.toResponse(customer);
     }
