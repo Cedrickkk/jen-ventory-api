@@ -34,3 +34,6 @@ build/
 
 ### Configurations ###
 application-local.yaml
+
+### Storage ###
+storage
