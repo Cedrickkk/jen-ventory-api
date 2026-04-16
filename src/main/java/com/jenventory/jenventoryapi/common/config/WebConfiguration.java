@@ -4,11 +4,15 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.web.PageableHandlerMethodArgumentResolver;
 import org.springframework.data.web.config.EnableSpringDataWebSupport;
+import org.springframework.http.CacheControl;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
+import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
+import java.nio.file.Path;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 @Configuration
 @EnableSpringDataWebSupport(pageSerializationMode = EnableSpringDataWebSupport.PageSerializationMode.VIA_DTO)
@@ -31,5 +35,14 @@ public class WebConfiguration implements WebMvcConfigurer {
         resolver.setMaxPageSize(100);
         resolver.setOneIndexedParameters(true);
         resolvers.add(resolver);
+    }
+
+    @Override
+    public void addResourceHandlers(ResourceHandlerRegistry registry) {
+        Path storagePath = Path.of("storage");
+        String resourceLocation = storagePath.toFile().getAbsolutePath();
+        registry.addResourceHandler("/storage/**")
+                .addResourceLocations("file:" + resourceLocation + "/")
+                .setCacheControl(CacheControl.maxAge(365, TimeUnit.DAYS).immutable());
     }
 }
