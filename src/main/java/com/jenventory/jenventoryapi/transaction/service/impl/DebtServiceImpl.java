@@ -72,6 +72,7 @@ public class DebtServiceImpl implements DebtService {
                         .paymentMethod(null)
                         .notes(request.getNotes())
                         .build());
+                return;
             }
 
             debtLedgerRepository.save(DebtLedger.builder()
