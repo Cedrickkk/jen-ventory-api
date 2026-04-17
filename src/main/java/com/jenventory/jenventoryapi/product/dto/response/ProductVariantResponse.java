@@ -22,6 +22,7 @@ public class ProductVariantResponse {
     private String size;
     private String flavor;
     private String packaging;
+    private String image;
     private Integer stockQuantity;
     private boolean active;
     private LocalDateTime createdAt;

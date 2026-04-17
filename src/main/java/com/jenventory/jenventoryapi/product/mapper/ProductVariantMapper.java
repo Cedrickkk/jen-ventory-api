@@ -28,6 +28,7 @@ public class ProductVariantMapper {
                 .sku(variant.getSku())
                 .price(variant.getPrice())
                 .size(variant.getSize())
+                .image(variant.getImage() != null ? variant.getImage().getStoredFilename() : null)
                 .flavor(variant.getFlavor())
                 .packaging(variant.getPackaging())
                 .stockQuantity(variant.getStockQuantity())

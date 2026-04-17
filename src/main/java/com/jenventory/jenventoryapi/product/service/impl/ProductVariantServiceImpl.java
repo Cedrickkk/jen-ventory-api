@@ -2,6 +2,9 @@ package com.jenventory.jenventoryapi.product.service.impl;
 
 import com.jenventory.jenventoryapi.common.exception.DuplicateResourceException;
 import com.jenventory.jenventoryapi.common.exception.ResourceNotFoundException;
+import com.jenventory.jenventoryapi.file.entity.File;
+import com.jenventory.jenventoryapi.file.enums.FileType;
+import com.jenventory.jenventoryapi.file.service.FileService;
 import com.jenventory.jenventoryapi.product.dto.request.ProductVariantRequest;
 import com.jenventory.jenventoryapi.product.dto.request.ProductVariantUpdateRequest;
 import com.jenventory.jenventoryapi.product.dto.response.ProductVariantResponse;
@@ -11,11 +14,13 @@ import com.jenventory.jenventoryapi.product.mapper.ProductVariantMapper;
 import com.jenventory.jenventoryapi.product.repository.ProductRepository;
 import com.jenventory.jenventoryapi.product.repository.ProductVariantRepository;
 import com.jenventory.jenventoryapi.product.service.ProductVariantService;
+import jakarta.annotation.Nullable;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 @Service
 @RequiredArgsConstructor
@@ -24,6 +29,7 @@ public class ProductVariantServiceImpl implements ProductVariantService {
     private final ProductVariantRepository productVariantRepository;
     private final ProductVariantMapper productVariantMapper;
     private final ProductRepository productRepository;
+    private final FileService fileService;
 
     @Override
     @Transactional(readOnly = true)
@@ -43,7 +49,7 @@ public class ProductVariantServiceImpl implements ProductVariantService {
 
     @Override
     @Transactional
-    public ProductVariantResponse create(Long productId, ProductVariantRequest request) {
+    public ProductVariantResponse create(Long productId, ProductVariantRequest request, @Nullable MultipartFile image) {
         Product product = productRepository.findByIdAndActiveTrue(productId)
                 .orElseThrow(() -> new ResourceNotFoundException("Product not found with id: " + productId));
 
@@ -54,6 +60,11 @@ public class ProductVariantServiceImpl implements ProductVariantService {
         ProductVariant productVariant = productVariantMapper.toEntity(request, product);
 
         productVariantRepository.save(productVariant);
+
+        if (image != null && !image.isEmpty()) {
+            File imageFile = fileService.create(image, FileType.IMAGE);
+            productVariant.setImage(imageFile);
+        }
 
         return productVariantMapper.toResponse(productVariant);
     }

@@ -15,6 +15,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 @RestController
 @RequestMapping("/api/v1/products/{productId}/variants")
@@ -38,9 +39,10 @@ public class ProductVariantController {
 
     @PostMapping
     public ResponseEntity<SuccessApiResponse<ProductVariantResponse>> create(
-            @PathVariable Long productId, @Valid @RequestBody ProductVariantRequest request) {
+            @PathVariable Long productId, @Valid @ModelAttribute ProductVariantRequest request,
+            @RequestParam("image") MultipartFile image) {
 
-        ProductVariantResponse productVariantResponse = productVariantService.create(productId, request);
+        ProductVariantResponse productVariantResponse = productVariantService.create(productId, request, image);
 
         SuccessApiResponse<ProductVariantResponse> response =
                 ApiResponseUtil.created(productVariantResponse, "Product variant created successfully");
