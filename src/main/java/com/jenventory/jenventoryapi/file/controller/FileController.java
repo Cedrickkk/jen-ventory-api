@@ -23,6 +23,7 @@ public class FileController {
     public ResponseEntity<Resource> serveImage(@PathVariable String filename) {
         Resource file = storageService.loadAsResource(filename, FileType.IMAGE);
         return ResponseEntity.ok()
+                .header(HttpHeaders.CACHE_CONTROL, "public, max-age=31536000, immutable")
                 .contentType(MediaType.parseMediaType(determineContentType(filename)))
                 .header(HttpHeaders.CONTENT_DISPOSITION, "inline; filename=\"" + file.getFilename() + "\"")
                 .body(file);
