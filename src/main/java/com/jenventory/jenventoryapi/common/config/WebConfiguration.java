@@ -41,8 +41,11 @@ public class WebConfiguration implements WebMvcConfigurer {
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
         Path storagePath = Path.of("storage");
         String resourceLocation = storagePath.toFile().getAbsolutePath();
-        registry.addResourceHandler("/storage/**")
+        registry.addResourceHandler("/api/v1/storage/**")
                 .addResourceLocations("file:" + resourceLocation + "/")
-                .setCacheControl(CacheControl.maxAge(365, TimeUnit.DAYS).immutable());
+                .setCacheControl(CacheControl.maxAge(365, TimeUnit.DAYS)
+                        .cachePublic()
+                        .immutable()
+                );
     }
 }
