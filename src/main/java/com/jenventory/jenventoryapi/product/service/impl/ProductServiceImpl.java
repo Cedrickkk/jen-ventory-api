@@ -2,6 +2,9 @@ package com.jenventory.jenventoryapi.product.service.impl;
 
 import com.jenventory.jenventoryapi.common.exception.DuplicateResourceException;
 import com.jenventory.jenventoryapi.common.exception.ResourceNotFoundException;
+import com.jenventory.jenventoryapi.file.entity.File;
+import com.jenventory.jenventoryapi.file.enums.FileType;
+import com.jenventory.jenventoryapi.file.service.FileService;
 import com.jenventory.jenventoryapi.product.dto.request.ProductRequest;
 import com.jenventory.jenventoryapi.product.dto.response.ProductResponse;
 import com.jenventory.jenventoryapi.product.entity.Product;
@@ -9,11 +12,13 @@ import com.jenventory.jenventoryapi.product.mapper.ProductMapper;
 import com.jenventory.jenventoryapi.product.repository.ProductRepository;
 import com.jenventory.jenventoryapi.product.repository.ProductVariantRepository;
 import com.jenventory.jenventoryapi.product.service.ProductService;
+import jakarta.annotation.Nullable;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -24,6 +29,7 @@ public class ProductServiceImpl implements ProductService {
     private final ProductRepository productRepository;
     private final ProductMapper productMapper;
     private final ProductVariantRepository productVariantRepository;
+    private final FileService fileService;
 
     @Override
     @Transactional(readOnly = true)
@@ -48,12 +54,17 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     @Transactional
-    public ProductResponse create(ProductRequest request) {
+    public ProductResponse create(ProductRequest request, @Nullable MultipartFile image) {
         if (productRepository.existsByName(request.getName())) {
             throw new DuplicateResourceException("Product with name " + request.getName() + " already exists.");
         }
 
         Product product = productRepository.save(productMapper.toEntity(request));
+
+        if (image != null && !image.isEmpty()) {
+            File imageFile = fileService.create(image, FileType.IMAGE);
+            product.setImage(imageFile);
+        }
 
         return productMapper.toResponse(product);
     }

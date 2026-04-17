@@ -1,5 +1,6 @@
 package com.jenventory.jenventoryapi.product.entity;
 
+import com.jenventory.jenventoryapi.file.entity.File;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
@@ -31,6 +32,10 @@ public class Product {
     @Builder.Default
     @Column(name = "active", nullable = false)
     private boolean active = true;
+
+    @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
+    @JoinColumn(name = "image_id", referencedColumnName = "id")
+    private File image;
 
     @CreationTimestamp
     @Column(name = "created_at", nullable = false, updatable = false)

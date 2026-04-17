@@ -12,6 +12,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -44,9 +45,10 @@ public class ProductController {
 
     @PostMapping
     public ResponseEntity<SuccessApiResponse<ProductResponse>> create(
-            @Valid @RequestBody ProductRequest request) {
+            @Valid @ModelAttribute ProductRequest request,
+            @RequestParam("image") MultipartFile image) {
 
-        ProductResponse productResponse = productService.create(request);
+        ProductResponse productResponse = productService.create(request, image);
 
         SuccessApiResponse<ProductResponse> response =
                 ApiResponseUtil.created(productResponse, "Product created successfully");

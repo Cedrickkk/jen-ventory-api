@@ -19,6 +19,7 @@ public class ProductResponse {
     private String description;
     @Builder.Default
     private Integer variantCount = 0;
+    private String image;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 
